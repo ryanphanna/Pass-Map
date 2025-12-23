@@ -102,13 +102,6 @@ const Discover = ({ onNavigate }) => {
       title: 'Temporary exhibits are worth it',
       description: 'Special exhibitions often showcase rare artifacts and artwork that may never return. Don\'t miss these limited-time opportunities.',
       label: 'Don\'t Miss'
-    },
-    {
-      id: 'tip-membership',
-      type: 'membership',
-      title: 'A membership pays for itself',
-      description: 'If you visit more than 3-4 times a year, a membership becomes worth it. Plus: reciprocal benefits, special events, and priority booking.',
-      label: 'Smart Move'
     }
   ];
 
@@ -247,16 +240,6 @@ const Discover = ({ onNavigate }) => {
           size: 'medium',
           priority: 6
         });
-      });
-    }
-
-    // Add final membership tip if user doesn't have memberships
-    if (userMemberships.length === 0 && culturalTips[5]) {
-      items.push({
-        type: 'tip',
-        data: culturalTips[5], // Membership value tip
-        size: 'medium',
-        priority: 7
       });
     }
 
