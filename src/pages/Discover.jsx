@@ -102,20 +102,20 @@ const Discover = () => {
   return (
     <div className="min-h-screen bg-accent-cream pb-16">
       {/* Hero Section - Magazine editorial style */}
-      <div className="relative bg-gradient-to-br from-neutral-900 via-neutral-800 to-primary-800 text-white py-20 sm:py-28 px-6 sm:px-8 overflow-hidden">
+      <div className="relative bg-gradient-to-br from-neutral-900 via-primary-900 to-primary-800 text-white py-24 sm:py-32 px-6 sm:px-8 overflow-hidden">
         {/* Decorative background elements */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-accent-gold/10 rounded-full -translate-y-48 translate-x-48 blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-80 h-80 bg-accent-sage/10 rounded-full translate-y-40 -translate-x-40 blur-3xl" />
+        <div className="absolute top-0 right-0 w-96 h-96 bg-accent-gold/20 rounded-full -translate-y-48 translate-x-48 blur-3xl" />
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-accent-sage/20 rounded-full translate-y-48 -translate-x-48 blur-3xl" />
 
         <div className="max-w-7xl mx-auto relative">
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-12 h-0.5 bg-accent-gold" />
-            <span className="text-overline text-white/70">Your Cultural Guide</span>
+            <div className="w-16 h-1 bg-gradient-to-r from-accent-gold to-accent-sage rounded-full" />
+            <span className="text-sm font-bold text-white/70 uppercase tracking-widest">Your Cultural Guide</span>
           </div>
-          <h2 className="text-display-sm sm:text-display font-bold mb-4 text-shadow-editorial leading-tight">
+          <h2 className="text-5xl sm:text-7xl font-black mb-5 text-shadow-editorial leading-tight bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">
             Discover {userLocation.city || 'Culture'}
           </h2>
-          <p className="text-body-lg text-white/80 max-w-2xl leading-magazine">
+          <p className="text-xl text-white/80 max-w-2xl leading-relaxed">
             Curated cultural experiences tailored to your interests and memberships
           </p>
         </div>
@@ -126,33 +126,36 @@ const Discover = () => {
         {sections.map((section, sectionIndex) => (
           <div key={section.id} className="mb-16 sm:mb-20">
             {/* Section Header - Refined typography */}
-            <div className="mb-8 sm:mb-10">
-              <div className="flex items-center gap-3 mb-3">
-                <section.icon
-                  className={`${section.color}`}
-                  size={28}
-                  strokeWidth={2}
-                />
-                <div className="h-px flex-1 bg-gradient-to-r from-neutral-300 to-transparent" />
+            <div className="mb-8 sm:mb-10 bg-white rounded-2xl p-6 shadow-soft border-l-4 border-accent-gold">
+              <div className="flex items-center gap-4 mb-3">
+                <div className="w-12 h-12 bg-gradient-to-br from-accent-gold to-accent-sage rounded-xl flex items-center justify-center shadow-soft">
+                  <section.icon
+                    className="text-white"
+                    size={24}
+                    strokeWidth={2.5}
+                  />
+                </div>
+                <div>
+                  <h3 className="text-2xl sm:text-3xl font-black text-neutral-900">
+                    {section.title}
+                  </h3>
+                  {section.id === 'ending-soon' && (
+                    <p className="text-sm text-neutral-600 font-medium mt-1">
+                      Don't miss these limited-time exhibitions
+                    </p>
+                  )}
+                  {section.id === 'reciprocals' && (
+                    <p className="text-sm text-neutral-600 font-medium mt-1">
+                      Exclusive access through your memberships
+                    </p>
+                  )}
+                  {section.id === 'free-access' && (
+                    <p className="text-sm text-neutral-600 font-medium mt-1">
+                      Experience culture at no cost
+                    </p>
+                  )}
+                </div>
               </div>
-              <h3 className="text-headline sm:text-display-sm font-bold text-neutral-900 mb-2">
-                {section.title}
-              </h3>
-              {section.id === 'ending-soon' && (
-                <p className="text-body text-neutral-600 leading-magazine">
-                  Don't miss these limited-time exhibitions
-                </p>
-              )}
-              {section.id === 'reciprocals' && (
-                <p className="text-body text-neutral-600 leading-magazine">
-                  Exclusive access through your memberships
-                </p>
-              )}
-              {section.id === 'free-access' && (
-                <p className="text-body text-neutral-600 leading-magazine">
-                  Experience culture at no cost
-                </p>
-              )}
             </div>
 
             {/* Bento Grid - Dynamic layouts */}

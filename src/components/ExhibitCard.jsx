@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Bookmark, Clock, MapPin, Gift, Sparkles } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { getInstitutionById } from '../data/sampleData';
@@ -6,6 +7,7 @@ const ExhibitCard = ({ exhibit, size = 'medium', onClick }) => {
   const { isExhibitSaved, toggleSavedExhibit } = useApp();
   const institution = getInstitutionById(exhibit.institutionId);
   const isSaved = isExhibitSaved(exhibit.id);
+  const [imageError, setImageError] = useState(false);
 
   // Calculate days until end
   const getDaysUntilEnd = () => {
@@ -74,12 +76,22 @@ const ExhibitCard = ({ exhibit, size = 'medium', onClick }) => {
       `}
     >
       {/* Image with magazine-style treatment */}
-      <div className="relative w-full h-full bg-neutral-900">
-        <img
-          src={exhibit.image}
-          alt={exhibit.title}
-          className="absolute inset-0 w-full h-full object-cover image-magazine"
-        />
+      <div className="relative w-full h-full bg-gradient-to-br from-primary-700 via-primary-600 to-accent-sage overflow-hidden">
+        {!imageError ? (
+          <img
+            src={exhibit.image}
+            alt={exhibit.title}
+            onError={() => setImageError(true)}
+            className="absolute inset-0 w-full h-full object-cover image-magazine"
+          />
+        ) : (
+          <div className="absolute inset-0 w-full h-full flex items-center justify-center bg-gradient-to-br from-primary-800 via-neutral-800 to-accent-slate">
+            <div className="text-center px-8">
+              <Sparkles className="mx-auto mb-4 text-accent-gold opacity-40" size={size === 'large' ? 64 : 48} strokeWidth={1.5} />
+              <div className="text-sm text-white/40 font-medium">{institution?.name}</div>
+            </div>
+          </div>
+        )}
         {/* Sophisticated gradient overlay */}
         <div className={`absolute inset-0 ${getOverlayStyle()}`} />
 

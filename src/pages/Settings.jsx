@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useApp } from '../context/AppContext';
 import { institutions } from '../data/sampleData';
-import { Check, X } from 'lucide-react';
+import { Check, X, Sparkles, MapPin } from 'lucide-react';
 
 const Settings = () => {
   const {
@@ -43,19 +43,20 @@ const Settings = () => {
   return (
     <div className="min-h-screen bg-accent-cream pb-16">
       {/* Header - Magazine editorial style */}
-      <div className="relative bg-gradient-to-br from-neutral-900 via-neutral-800 to-primary-800 text-white py-16 sm:py-20 px-6 sm:px-8 overflow-hidden">
+      <div className="relative bg-gradient-to-br from-neutral-900 via-primary-900 to-primary-800 text-white py-20 sm:py-24 px-6 sm:px-8 overflow-hidden">
         {/* Decorative background elements */}
-        <div className="absolute top-0 right-0 w-80 h-80 bg-accent-sage/10 rounded-full -translate-y-40 translate-x-40 blur-3xl" />
+        <div className="absolute top-0 right-0 w-96 h-96 bg-accent-gold/20 rounded-full -translate-y-48 translate-x-48 blur-3xl" />
+        <div className="absolute bottom-0 left-0 w-80 h-80 bg-accent-sage/20 rounded-full translate-y-40 -translate-x-40 blur-3xl" />
 
         <div className="max-w-5xl mx-auto relative">
-          <div className="flex items-center gap-3 mb-5">
-            <div className="w-12 h-0.5 bg-accent-gold" />
-            <span className="text-overline text-white/70">Personalization</span>
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-16 h-1 bg-gradient-to-r from-accent-gold to-accent-sage rounded-full" />
+            <span className="text-sm font-bold text-white/70 uppercase tracking-widest">Personalization</span>
           </div>
-          <h2 className="text-headline sm:text-display-sm font-bold mb-3 text-shadow-editorial">
+          <h2 className="text-5xl sm:text-6xl font-black mb-4 text-shadow-editorial bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">
             Settings
           </h2>
-          <p className="text-body-lg text-white/80 leading-magazine">
+          <p className="text-xl text-white/80 leading-relaxed max-w-2xl">
             Curate your cultural journey with personalized preferences
           </p>
         </div>
@@ -73,7 +74,7 @@ const Settings = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
             {availableInterests.map((interest) => {
               const isSelected = userInterests.includes(interest.id);
               return (
@@ -81,17 +82,21 @@ const Settings = () => {
                   key={interest.id}
                   onClick={() => toggleInterest(interest.id)}
                   className={`
-                    group relative flex items-center justify-center gap-2 px-5 py-4 rounded-2xl
-                    transition-magazine border-2
+                    group relative flex flex-col items-center justify-center gap-3 px-5 py-6 rounded-2xl
+                    transition-all duration-300 border-2 hover-elevate
                     ${isSelected
-                      ? 'bg-neutral-900 text-white border-neutral-900 shadow-soft'
-                      : 'bg-white text-neutral-700 border-neutral-200 hover:border-accent-gold hover:shadow-subtle'
+                      ? 'bg-gradient-to-br from-neutral-900 to-neutral-800 text-white border-neutral-900 shadow-medium scale-[1.02]'
+                      : 'bg-white text-neutral-700 border-neutral-200 hover:border-accent-gold hover:bg-accent-cream/30 hover:shadow-soft'
                     }
                   `}
                 >
-                  <span className="text-xl transition-transform group-hover:scale-110">{interest.emoji}</span>
-                  <span className="text-caption font-semibold">{interest.label}</span>
-                  {isSelected && <Check size={16} strokeWidth={2.5} className="absolute top-2 right-2" />}
+                  <span className="text-4xl transition-transform duration-300 group-hover:scale-125 group-hover:rotate-12">{interest.emoji}</span>
+                  <span className="text-sm font-bold tracking-wide">{interest.label}</span>
+                  {isSelected && (
+                    <div className="absolute top-3 right-3 w-6 h-6 bg-accent-gold rounded-full flex items-center justify-center shadow-soft">
+                      <Check size={14} strokeWidth={3} className="text-white" />
+                    </div>
+                  )}
                 </button>
               );
             })}
@@ -119,25 +124,27 @@ const Settings = () => {
                 return (
                   <div
                     key={`${membership.institutionId}-${membership.tier}`}
-                    className="group flex items-center justify-between p-5 bg-accent-cream rounded-2xl border border-neutral-200 transition-magazine hover:border-accent-gold hover:shadow-subtle"
+                    className="group relative flex items-center justify-between p-6 bg-gradient-to-br from-white to-accent-cream rounded-2xl border-2 border-neutral-200 transition-all duration-300 hover:border-accent-gold hover:shadow-medium hover:-translate-y-1"
                   >
-                    <div className="flex items-center gap-3">
-                      <div className="w-1.5 h-12 bg-gradient-to-b from-accent-gold to-accent-sage rounded-full" />
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 bg-gradient-to-br from-accent-gold to-accent-sage rounded-xl flex items-center justify-center shadow-soft">
+                        <Sparkles size={24} className="text-white" strokeWidth={2} />
+                      </div>
                       <div>
-                        <div className="text-body font-bold text-neutral-900">
+                        <div className="text-lg font-bold text-neutral-900">
                           {institution?.name}
                         </div>
-                        <div className="text-caption text-neutral-600 capitalize font-medium">
+                        <div className="text-sm text-neutral-600 capitalize font-semibold mt-0.5">
                           {membership.tier} Membership
                         </div>
                       </div>
                     </div>
                     <button
                       onClick={() => toggleMembership(membership.institutionId, membership.tier)}
-                      className="p-2.5 text-accent-terracotta hover:bg-accent-terracotta/10 rounded-xl transition-magazine"
+                      className="p-3 text-accent-terracotta hover:bg-accent-terracotta/10 rounded-xl transition-all duration-300 hover:rotate-90"
                       aria-label="Remove membership"
                     >
-                      <X size={20} strokeWidth={2.5} />
+                      <X size={22} strokeWidth={2.5} />
                     </button>
                   </div>
                 );
@@ -146,16 +153,16 @@ const Settings = () => {
           )}
 
           {/* Add New Membership */}
-          <form onSubmit={handleAddMembership} className="space-y-5">
+          <form onSubmit={handleAddMembership} className="space-y-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <div>
-                <label className="block text-caption font-bold text-neutral-900 mb-3 uppercase tracking-wide">
+                <label className="block text-xs font-bold text-neutral-900 mb-3 uppercase tracking-wider">
                   Institution
                 </label>
                 <select
                   value={selectedInstitution}
                   onChange={(e) => setSelectedInstitution(e.target.value)}
-                  className="w-full px-4 py-3 border-2 border-neutral-200 rounded-xl focus-editorial transition-magazine text-body text-neutral-900"
+                  className="w-full px-5 py-4 border-2 border-neutral-200 rounded-xl focus-editorial transition-all duration-300 text-base text-neutral-900 font-medium hover:border-accent-gold bg-white cursor-pointer"
                 >
                   <option value="">Select an institution</option>
                   {institutions
@@ -170,13 +177,13 @@ const Settings = () => {
               </div>
 
               <div>
-                <label className="block text-caption font-bold text-neutral-900 mb-3 uppercase tracking-wide">
+                <label className="block text-xs font-bold text-neutral-900 mb-3 uppercase tracking-wider">
                   Membership Tier
                 </label>
                 <select
                   value={selectedTier}
                   onChange={(e) => setSelectedTier(e.target.value)}
-                  className="w-full px-4 py-3 border-2 border-neutral-200 rounded-xl focus-editorial transition-magazine text-body text-neutral-900 disabled:bg-neutral-100 disabled:cursor-not-allowed"
+                  className="w-full px-5 py-4 border-2 border-neutral-200 rounded-xl focus-editorial transition-all duration-300 text-base text-neutral-900 font-medium hover:border-accent-gold disabled:bg-neutral-100 disabled:cursor-not-allowed disabled:opacity-50"
                   disabled={!selectedInstitution}
                 >
                   <option value="">Select a tier</option>
@@ -197,9 +204,9 @@ const Settings = () => {
               type="submit"
               disabled={!selectedInstitution || !selectedTier}
               className={`
-                w-full py-4 px-6 rounded-2xl font-semibold transition-magazine text-body
+                w-full py-5 px-6 rounded-2xl font-bold transition-all duration-300 text-base
                 ${selectedInstitution && selectedTier
-                  ? 'bg-neutral-900 text-white hover:bg-neutral-800 shadow-soft hover:shadow-medium'
+                  ? 'bg-gradient-to-r from-neutral-900 to-neutral-800 text-white hover:from-neutral-800 hover:to-neutral-700 shadow-medium hover:shadow-strong hover:-translate-y-0.5'
                   : 'bg-neutral-200 text-neutral-400 cursor-not-allowed'
                 }
               `}
@@ -220,18 +227,22 @@ const Settings = () => {
             </p>
           </div>
 
-          <div className="p-6 bg-accent-cream rounded-2xl border border-neutral-200">
-            <div className="flex items-center gap-3">
-              <div className="w-1 h-1 rounded-full bg-accent-gold" />
-              <div className="text-body-lg font-bold text-neutral-900">
-                {userLocation.city}
+          <div className="p-6 bg-gradient-to-br from-accent-cream to-white rounded-2xl border-2 border-neutral-200 shadow-soft">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-gradient-to-br from-accent-terracotta to-accent-gold rounded-xl flex items-center justify-center shadow-soft">
+                <MapPin size={24} className="text-white" strokeWidth={2} />
+              </div>
+              <div>
+                <div className="text-lg font-bold text-neutral-900">
+                  {userLocation.city}
+                </div>
+                {userLocation.neighborhood && (
+                  <div className="text-sm text-neutral-600 font-medium mt-0.5">
+                    {userLocation.neighborhood}
+                  </div>
+                )}
               </div>
             </div>
-            {userLocation.neighborhood && (
-              <div className="text-body text-neutral-600 mt-1 ml-4">
-                {userLocation.neighborhood}
-              </div>
-            )}
           </div>
         </section>
 
@@ -253,7 +264,7 @@ const Settings = () => {
                 window.location.reload();
               }
             }}
-            className="px-6 py-3 bg-accent-terracotta/10 text-accent-terracotta rounded-2xl font-semibold hover:bg-accent-terracotta/20 transition-magazine"
+            className="px-8 py-4 bg-gradient-to-r from-accent-terracotta/10 to-accent-terracotta/5 text-accent-terracotta rounded-2xl font-bold hover:from-accent-terracotta/20 hover:to-accent-terracotta/10 transition-all duration-300 border-2 border-accent-terracotta/20 hover:border-accent-terracotta/40 hover:shadow-soft"
           >
             Clear All Data
           </button>
