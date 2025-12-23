@@ -267,8 +267,6 @@ const ExhibitDetail = ({ exhibit, onClose }) => {
             <button
               onClick={() => {
                 markVisited(exhibit.institutionId);
-                // Show a brief success message (could be enhanced with toast notification)
-                alert('Marked as visited!');
               }}
               className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-neutral-100 text-neutral-700 hover:bg-neutral-200 transition-magazine font-semibold"
             >
@@ -288,8 +286,12 @@ const ExhibitDetail = ({ exhibit, onClose }) => {
                   });
                 } else {
                   // Fallback: copy to clipboard
-                  navigator.clipboard.writeText(window.location.href);
-                  alert('Link copied to clipboard!');
+                  try {
+                    navigator.clipboard.writeText(window.location.href);
+                  } catch (error) {
+                    // Clipboard API not available
+                    console.error('Failed to copy to clipboard', error);
+                  }
                 }
               }}
               className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-neutral-100 text-neutral-700 hover:bg-neutral-200 transition-magazine font-semibold"
