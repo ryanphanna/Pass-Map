@@ -12,13 +12,13 @@ function App() {
   const renderView = () => {
     switch (currentView) {
       case 'discover':
-        return <ErrorBoundary><Discover /></ErrorBoundary>;
+        return <ErrorBoundary><Discover onNavigate={setCurrentView} /></ErrorBoundary>;
       case 'saved':
         return <ErrorBoundary><Saved /></ErrorBoundary>;
       case 'settings':
         return <ErrorBoundary><Settings /></ErrorBoundary>;
       default:
-        return <ErrorBoundary><Discover /></ErrorBoundary>;
+        return <ErrorBoundary><Discover onNavigate={setCurrentView} /></ErrorBoundary>;
     }
   };
 

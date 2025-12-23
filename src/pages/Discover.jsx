@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useApp } from '../context/AppContext';
 import ExhibitCard from '../components/ExhibitCard';
 import ExhibitDetail from '../components/ExhibitDetail';
 import ReciprocalCard from '../components/ReciprocalCard';
 import TipCard from '../components/TipCard';
+import Onboarding from '../components/Onboarding';
 import {
   exhibits,
   getExhibitsEndingSoon,
@@ -13,9 +14,30 @@ import {
 } from '../data/sampleData';
 import { Sparkles } from 'lucide-react';
 
-const Discover = () => {
+const Discover = ({ onNavigate }) => {
   const { userInterests, userMemberships, visitHistory, userLocation } = useApp();
   const [selectedExhibit, setSelectedExhibit] = useState(null);
+  const [showOnboarding, setShowOnboarding] = useState(false);
+
+  // Check if this is the user's first visit
+  useEffect(() => {
+    const hasSeenOnboarding = localStorage.getItem('hasSeenOnboarding');
+    if (!hasSeenOnboarding) {
+      setShowOnboarding(true);
+    }
+  }, []);
+
+  const handleCloseOnboarding = () => {
+    setShowOnboarding(false);
+    localStorage.setItem('hasSeenOnboarding', 'true');
+  };
+
+  const handleGoToSettings = () => {
+    handleCloseOnboarding();
+    if (onNavigate) {
+      onNavigate('settings');
+    }
+  };
 
   // Get curated content
   const endingSoon = getExhibitsEndingSoon(30);
@@ -321,6 +343,14 @@ const Discover = () => {
         <ExhibitDetail
           exhibit={selectedExhibit}
           onClose={() => setSelectedExhibit(null)}
+        />
+      )}
+
+      {/* Onboarding Modal - shown on first visit */}
+      {showOnboarding && (
+        <Onboarding
+          onClose={handleCloseOnboarding}
+          onGoToSettings={handleGoToSettings}
         />
       )}
     </div>
