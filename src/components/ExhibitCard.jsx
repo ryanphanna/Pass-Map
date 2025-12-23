@@ -47,9 +47,24 @@ const ExhibitCard = ({ exhibit, size = 'medium', onClick }) => {
     toggleSavedExhibit(exhibit.id);
   };
 
+  const handleClick = () => {
+    if (onClick) onClick();
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      if (onClick) onClick();
+    }
+  };
+
   return (
     <div
-      onClick={onClick}
+      onClick={handleClick}
+      onKeyDown={handleKeyDown}
+      tabIndex={0}
+      role="button"
+      aria-label={`View details for ${exhibit.title}`}
       className={`
         ${sizeClasses[size]}
         ${heightClasses[size]}
