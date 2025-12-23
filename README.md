@@ -47,7 +47,7 @@ A React web app for discovering cultural institutions and exhibits in Toronto. B
 1. Clone the repository:
 ```bash
 git clone https://github.com/ryanphanna/Pass-Map.git
-cd Pass-Map/toronto-culture-app
+cd Pass-Map
 ```
 
 2. Install dependencies:
@@ -96,9 +96,29 @@ This will build the app and push the `dist` directory to the `gh-pages` branch.
 
 ### GitHub Pages Setup
 
-1. Go to your repository Settings → Pages
-2. Set Source to "GitHub Actions"
-3. The app will be available at: `https://ryanphanna.github.io/Pass-Map/`
+**IMPORTANT**: For GitHub Pages to work with GitHub Actions, you must configure your repository settings:
+
+1. Go to your repository on GitHub
+2. Click **Settings** → **Pages** (in the left sidebar)
+3. Under **Build and deployment**:
+   - **Source**: Select **"GitHub Actions"** from the dropdown (NOT "Deploy from a branch")
+4. Click **Settings** → **Actions** → **General** (in the left sidebar)
+5. Scroll to **Workflow permissions** at the bottom:
+   - Select **"Read and write permissions"**
+   - Check **"Allow GitHub Actions to create and approve pull requests"**
+   - Click **Save**
+
+Once configured, the app will automatically deploy when you push to `main` or any `claude/*` branch.
+
+The app will be available at: `https://ryanphanna.github.io/Pass-Map/`
+
+#### Troubleshooting
+
+If you get a 403 or 404 error:
+- Verify the Pages source is set to "GitHub Actions" (not "Deploy from a branch")
+- Check that workflow permissions are set to "Read and write"
+- Ensure the repository is public (or you have GitHub Pro for private repos)
+- Wait 1-2 minutes after the first successful deployment for DNS to propagate
 
 ## Data Structure
 
