@@ -1,8 +1,11 @@
+import { useState } from 'react';
 import { Bookmark, Clock, MapPin, Gift, Sparkles } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { getInstitutionById } from '../data/sampleData';
+import ExhibitDetail from './ExhibitDetail';
 
 const ExhibitCard = ({ exhibit, size = 'medium', variant = 'default' }) => {
+  const [showDetail, setShowDetail] = useState(false);
   const { isExhibitSaved, toggleSavedExhibit } = useApp();
   const institution = getInstitutionById(exhibit.institutionId);
   const isSaved = isExhibitSaved(exhibit.id);
@@ -47,16 +50,28 @@ const ExhibitCard = ({ exhibit, size = 'medium', variant = 'default' }) => {
     toggleSavedExhibit(exhibit.id);
   };
 
+  const handleCardClick = () => {
+    setShowDetail(true);
+  };
+
   return (
-    <div
-      className={`
-        ${sizeClasses[size]}
-        ${heightClasses[size]}
-        relative overflow-hidden cursor-pointer group
-        hover-elevate image-magazine-hover
-        ${size === 'large' ? 'rounded-3xl shadow-medium hover:shadow-editorial' : 'rounded-2xl shadow-soft hover:shadow-strong'}
-      `}
-    >
+    <>
+      {showDetail && (
+        <ExhibitDetail
+          exhibit={exhibit}
+          onClose={() => setShowDetail(false)}
+        />
+      )}
+      <div
+        onClick={handleCardClick}
+        className={`
+          ${sizeClasses[size]}
+          ${heightClasses[size]}
+          relative overflow-hidden cursor-pointer group
+          hover-elevate image-magazine-hover
+          ${size === 'large' ? 'rounded-3xl shadow-medium hover:shadow-editorial' : 'rounded-2xl shadow-soft hover:shadow-strong'}
+        `}
+      >
       {/* Image with magazine-style treatment */}
       <div className="relative w-full h-full bg-neutral-900">
         <img
@@ -163,7 +178,8 @@ const ExhibitCard = ({ exhibit, size = 'medium', variant = 'default' }) => {
           </div>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 };
 
