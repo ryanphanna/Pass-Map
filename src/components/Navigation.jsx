@@ -1,6 +1,9 @@
 import { Compass, Bookmark, Settings } from 'lucide-react';
+import { useApp } from '../context/AppContext';
 
 const Navigation = ({ currentView, setCurrentView }) => {
+  const { userLocation } = useApp();
+  
   const navItems = [
     { id: 'discover', label: 'Discover', icon: Compass },
     { id: 'saved', label: 'Saved', icon: Bookmark },
@@ -15,13 +18,14 @@ const Navigation = ({ currentView, setCurrentView }) => {
           <div className="flex items-center gap-3">
             <div className="w-1.5 h-8 bg-gradient-to-b from-accent-gold to-accent-sage rounded-full" />
             <h1 className="text-2xl font-bold text-neutral-900 tracking-tight">
-              Culture Toronto
+              Culture {userLocation.city || 'Discovery'}
             </h1>
           </div>
 
           {/* Navigation items - refined design */}
           <div className="flex gap-2">
-            {navItems.map(({ id, label, icon: Icon }) => (
+            {/* eslint-disable-next-line no-unused-vars */}
+            {navItems.map(({ id, label, icon: IconComponent }) => (
               <button
                 key={id}
                 onClick={() => setCurrentView(id)}
@@ -33,7 +37,7 @@ const Navigation = ({ currentView, setCurrentView }) => {
                   }
                 `}
               >
-                <Icon
+                <IconComponent
                   size={20}
                   strokeWidth={currentView === id ? 2.5 : 2}
                   className="transition-transform group-hover:scale-110"

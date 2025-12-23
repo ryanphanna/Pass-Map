@@ -2,7 +2,7 @@ import { Bookmark, Clock, MapPin, Gift, Sparkles } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { getInstitutionById } from '../data/sampleData';
 
-const ExhibitCard = ({ exhibit, size = 'medium', variant = 'default' }) => {
+const ExhibitCard = ({ exhibit, size = 'medium', onClick }) => {
   const { isExhibitSaved, toggleSavedExhibit } = useApp();
   const institution = getInstitutionById(exhibit.institutionId);
   const isSaved = isExhibitSaved(exhibit.id);
@@ -49,6 +49,7 @@ const ExhibitCard = ({ exhibit, size = 'medium', variant = 'default' }) => {
 
   return (
     <div
+      onClick={onClick}
       className={`
         ${sizeClasses[size]}
         ${heightClasses[size]}

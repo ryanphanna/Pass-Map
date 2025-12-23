@@ -10,7 +10,7 @@ const Settings = () => {
     userInterests,
     toggleInterest,
     userLocation,
-    setUserLocation
+    setUserLocation: _setUserLocation
   } = useApp();
 
   const [selectedInstitution, setSelectedInstitution] = useState('');

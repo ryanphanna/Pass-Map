@@ -1,10 +1,13 @@
+import { useState } from 'react';
 import { useApp } from '../context/AppContext';
 import ExhibitCard from '../components/ExhibitCard';
+import ExhibitDetail from '../components/ExhibitDetail';
 import { exhibits } from '../data/sampleData';
 import { Bookmark } from 'lucide-react';
 
 const Saved = () => {
   const { savedExhibits } = useApp();
+  const [selectedExhibit, setSelectedExhibit] = useState(null);
 
   const savedExhibitsList = exhibits.filter(ex =>
     savedExhibits.includes(ex.id)
@@ -43,6 +46,7 @@ const Saved = () => {
                 key={exhibit.id}
                 exhibit={exhibit}
                 size="small"
+                onClick={() => setSelectedExhibit(exhibit)}
               />
             ))}
           </div>
@@ -60,6 +64,14 @@ const Saved = () => {
           </div>
         )}
       </div>
+
+      {/* Exhibit Detail Modal */}
+      {selectedExhibit && (
+        <ExhibitDetail 
+          exhibit={selectedExhibit} 
+          onClose={() => setSelectedExhibit(null)} 
+        />
+      )}
     </div>
   );
 };

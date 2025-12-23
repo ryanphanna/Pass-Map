@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useEffect } from 'react';
 
 const AppContext = createContext();
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useApp = () => {
   const context = useContext(AppContext);
   if (!context) {
@@ -11,6 +12,9 @@ export const useApp = () => {
 };
 
 export const AppProvider = ({ children }) => {
+  // Loading state
+  const [isLoading, setIsLoading] = useState(false);
+
   // Load saved state from localStorage
   const [savedExhibits, setSavedExhibits] = useState(() => {
     const saved = localStorage.getItem('savedExhibits');
@@ -131,6 +135,8 @@ export const AppProvider = ({ children }) => {
   };
 
   const value = {
+    isLoading,
+    setIsLoading,
     savedExhibits,
     toggleSavedExhibit,
     isExhibitSaved,

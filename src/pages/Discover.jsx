@@ -1,18 +1,20 @@
+import { useState } from 'react';
 import { useApp } from '../context/AppContext';
 import ExhibitCard from '../components/ExhibitCard';
+import ExhibitDetail from '../components/ExhibitDetail';
 import ReciprocalCard from '../components/ReciprocalCard';
 import {
   exhibits,
   getExhibitsEndingSoon,
   getFreeAccessOpportunities,
   getExhibitsByInterests,
-  reciprocalBenefits,
-  getInstitutionById
+  reciprocalBenefits
 } from '../data/sampleData';
 import { Clock, Gift, Sparkles } from 'lucide-react';
 
 const Discover = () => {
-  const { userInterests, userMemberships, visitHistory } = useApp();
+  const { userInterests, userMemberships, visitHistory, userLocation } = useApp();
+  const [selectedExhibit, setSelectedExhibit] = useState(null);
 
   // Get curated content
   const endingSoon = getExhibitsEndingSoon(30);
@@ -111,7 +113,7 @@ const Discover = () => {
             <span className="text-overline text-white/70">Your Cultural Guide</span>
           </div>
           <h2 className="text-display-sm sm:text-display font-bold mb-4 text-shadow-editorial leading-tight">
-            Discover Toronto
+            Discover {userLocation.city || 'Culture'}
           </h2>
           <p className="text-body-lg text-white/80 max-w-2xl leading-magazine">
             Curated cultural experiences tailored to your interests and memberships
@@ -189,6 +191,7 @@ const Discover = () => {
                       key={item.id}
                       exhibit={item}
                       size={size}
+                      onClick={() => setSelectedExhibit(item)}
                     />
                   );
                 })
@@ -204,7 +207,7 @@ const Discover = () => {
               <Sparkles className="text-white" size={36} strokeWidth={2} />
             </div>
             <h3 className="text-title-lg font-bold text-neutral-900 mb-4">
-              Welcome to Culture Toronto
+              Welcome to Culture {userLocation.city || 'Discovery'}
             </h3>
             <p className="text-body text-neutral-600 max-w-md mx-auto leading-magazine">
               Set your interests in Settings to receive personalized cultural recommendations
@@ -212,6 +215,14 @@ const Discover = () => {
           </div>
         )}
       </div>
+
+      {/* Exhibit Detail Modal */}
+      {selectedExhibit && (
+        <ExhibitDetail 
+          exhibit={selectedExhibit} 
+          onClose={() => setSelectedExhibit(null)} 
+        />
+      )}
     </div>
   );
 };
