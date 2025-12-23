@@ -53,7 +53,7 @@ class ErrorBoundary extends Component {
                 Try Again
               </button>
               <button
-                onClick={() => window.location.href = '/'}
+                onClick={() => window.location.replace('/')}
                 className="px-6 py-3 bg-neutral-200 text-neutral-900 rounded-lg font-medium hover:bg-neutral-300 transition-colors"
               >
                 Go Home
