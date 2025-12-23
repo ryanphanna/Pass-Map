@@ -6,8 +6,8 @@ const ReciprocalCard = ({ reciprocal }) => {
   const toInstitution = getInstitutionById(reciprocal.toInstitutionId);
 
   return (
-    <div className="col-span-1 sm:col-span-2 row-span-1 relative overflow-hidden rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer group">
-      <div className="p-6 h-full flex flex-col justify-between min-h-[200px]">
+    <div className="col-span-1 md:col-span-2 h-[240px] relative overflow-hidden rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer group">
+      <div className="p-6 h-full flex flex-col justify-between">
         <div>
           <div className="inline-flex items-center space-x-2 px-3 py-1 bg-white/20 rounded-full mb-4">
             <Gift size={16} className="text-white" />

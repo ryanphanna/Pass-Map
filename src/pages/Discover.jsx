@@ -124,7 +124,7 @@ const Discover = () => {
             </div>
 
             {/* Bento Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 auto-rows-auto">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               {section.id === 'reciprocals' ? (
                 // Reciprocal benefits cards
                 section.items.map((item) => (
@@ -136,8 +136,8 @@ const Discover = () => {
                   // Vary the card sizes for visual interest
                   let size = 'medium';
                   if (sectionIndex === 0 && index === 0) size = 'large'; // First card in first section
-                  if (section.items.length === 1) size = 'wide';
-                  if (index % 3 === 2) size = 'small';
+                  else if (index % 3 === 0) size = 'medium';
+                  else size = 'small';
 
                   return (
                     <ExhibitCard

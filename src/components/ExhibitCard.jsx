@@ -21,10 +21,17 @@ const ExhibitCard = ({ exhibit, size = 'medium', variant = 'default' }) => {
 
   // Size classes for bento grid
   const sizeClasses = {
-    small: 'col-span-1 row-span-1',
-    medium: 'col-span-1 sm:col-span-2 row-span-1',
-    large: 'col-span-1 sm:col-span-2 row-span-2',
-    wide: 'col-span-full row-span-1'
+    small: 'col-span-1',
+    medium: 'col-span-1 md:col-span-2',
+    large: 'col-span-1 md:col-span-2',
+    wide: 'col-span-full'
+  };
+
+  const heightClasses = {
+    small: 'h-[280px]',
+    medium: 'h-[320px]',
+    large: 'h-[400px] md:h-[480px]',
+    wide: 'h-[320px]'
   };
 
   const handleSave = (e) => {
@@ -36,16 +43,17 @@ const ExhibitCard = ({ exhibit, size = 'medium', variant = 'default' }) => {
     <div
       className={`
         ${sizeClasses[size]}
+        ${heightClasses[size]}
         relative overflow-hidden rounded-2xl bg-white shadow-sm hover:shadow-md
         transition-all duration-300 cursor-pointer group
       `}
     >
       {/* Image */}
-      <div className="relative h-full min-h-[200px]">
+      <div className="relative w-full h-full">
         <img
           src={exhibit.image}
           alt={exhibit.title}
-          className="w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-cover"
         />
         {/* Gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
