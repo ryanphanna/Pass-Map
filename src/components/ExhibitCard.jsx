@@ -12,11 +12,17 @@ const ExhibitCard = ({ exhibit, size = 'medium', onClick }) => {
   // Calculate days until end
   const getDaysUntilEnd = () => {
     if (!exhibit.endDate || exhibit.isPermanent) return null;
+
     const now = new Date();
+    now.setHours(0, 0, 0, 0);
+
     const end = new Date(exhibit.endDate);
+    end.setHours(0, 0, 0, 0);
+
     const diffTime = end - now;
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    return diffDays;
+
+    return diffDays > 0 ? diffDays : null;
   };
 
   const daysUntilEnd = getDaysUntilEnd();
