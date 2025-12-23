@@ -170,16 +170,16 @@ The app currently uses hardcoded sample data in `src/data/sampleData.js`. The da
 }
 ```
 
-## Future Enhancements
+## Development Roadmap
 
-- [ ] Connect to Airtable API for real data
-- [ ] Add detailed exhibit pages
-- [ ] Implement geolocation for distance-based sorting
-- [ ] Add calendar integration for planning visits
-- [ ] Push notifications for exhibits ending soon
-- [ ] Social sharing features
-- [ ] User reviews and ratings
-- [ ] Multi-city support
+For a comprehensive list of planned features, improvements, and known issues, see **[ROADMAP.md](./ROADMAP.md)**.
+
+The roadmap includes 20+ items organized by priority:
+- 🔴 **High Priority** - Core UX gaps (clickable cards, search/filter, loading states)
+- 🟡 **Medium Priority** - Polish & improvements (bottom nav, error handling, image optimization)
+- 🟢 **Low Priority** - Future enhancements (PWA features, maps, testing, accessibility)
+
+Each item includes detailed implementation notes, affected files, and code examples.
 
 ## Project Structure
 
