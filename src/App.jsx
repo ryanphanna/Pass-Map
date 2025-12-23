@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { AppProvider } from './context/AppContext';
 import Navigation from './components/Navigation';
+import ErrorBoundary from './components/ErrorBoundary';
 import Discover from './pages/Discover';
 import Saved from './pages/Saved';
 import Settings from './pages/Settings';
@@ -11,13 +12,13 @@ function App() {
   const renderView = () => {
     switch (currentView) {
       case 'discover':
-        return <Discover />;
+        return <ErrorBoundary><Discover /></ErrorBoundary>;
       case 'saved':
-        return <Saved />;
+        return <ErrorBoundary><Saved /></ErrorBoundary>;
       case 'settings':
-        return <Settings />;
+        return <ErrorBoundary><Settings /></ErrorBoundary>;
       default:
-        return <Discover />;
+        return <ErrorBoundary><Discover /></ErrorBoundary>;
     }
   };
 
