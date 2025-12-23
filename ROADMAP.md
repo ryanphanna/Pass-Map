@@ -438,4 +438,4 @@ When ready to tackle an issue:
 5. Commit with a clear message referencing the issue number
 6. Check off the item once complete
 
-Feel free to ask Claude to implement any of these issues by referencing the issue number or title!
+Feel free to implement any of these issues by referencing the issue number or title!
