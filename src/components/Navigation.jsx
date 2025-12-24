@@ -1,4 +1,4 @@
-import { Compass, Bookmark, Settings } from 'lucide-react';
+import { Compass, Map, Bookmark, Settings } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 
 const Navigation = ({ currentView, setCurrentView }) => {
@@ -6,6 +6,7 @@ const Navigation = ({ currentView, setCurrentView }) => {
   
   const navItems = [
     { id: 'discover', label: 'Discover', icon: Compass },
+    { id: 'map', label: 'Map', icon: Map },
     { id: 'saved', label: 'Saved', icon: Bookmark },
     { id: 'settings', label: 'Settings', icon: Settings }
   ];

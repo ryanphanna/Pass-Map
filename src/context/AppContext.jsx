@@ -33,7 +33,7 @@ export const AppProvider = ({ children }) => {
 
   const [userLocation, setUserLocation] = useState(() => {
     const saved = localStorage.getItem('userLocation');
-    return saved ? JSON.parse(saved) : { city: 'Toronto', neighborhood: null };
+    return saved ? JSON.parse(saved) : { city: 'Toronto', neighborhood: null, lat: null, lng: null };
   });
 
   const [visitHistory, setVisitHistory] = useState(() => {

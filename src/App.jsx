@@ -3,6 +3,7 @@ import { AppProvider } from './context/AppContext';
 import Navigation from './components/Navigation';
 import ErrorBoundary from './components/ErrorBoundary';
 import Discover from './pages/Discover';
+import MapView from './pages/MapView';
 import Saved from './pages/Saved';
 import Settings from './pages/Settings';
 
@@ -13,6 +14,8 @@ function App() {
     switch (currentView) {
       case 'discover':
         return <ErrorBoundary><Discover onNavigate={setCurrentView} /></ErrorBoundary>;
+      case 'map':
+        return <ErrorBoundary><MapView /></ErrorBoundary>;
       case 'saved':
         return <ErrorBoundary><Saved /></ErrorBoundary>;
       case 'settings':

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useApp } from '../context/AppContext';
 import ExhibitCard from '../components/ExhibitCard';
 import ExhibitDetail from '../components/ExhibitDetail';
@@ -15,17 +15,12 @@ import {
 import { Sparkles } from 'lucide-react';
 
 const Discover = ({ onNavigate }) => {
-  const { userInterests, userMemberships, visitHistory, userLocation } = useApp();
+  const { userInterests, userMemberships, visitHistory } = useApp();
   const [selectedExhibit, setSelectedExhibit] = useState(null);
-  const [showOnboarding, setShowOnboarding] = useState(false);
-
-  // Check if this is the user's first visit
-  useEffect(() => {
+  const [showOnboarding, setShowOnboarding] = useState(() => {
     const hasSeenOnboarding = localStorage.getItem('hasSeenOnboarding');
-    if (!hasSeenOnboarding) {
-      setShowOnboarding(true);
-    }
-  }, []);
+    return !hasSeenOnboarding;
+  });
 
   const handleCloseOnboarding = () => {
     setShowOnboarding(false);

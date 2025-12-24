@@ -136,7 +136,9 @@ const ExhibitDetail = ({ exhibit, onClose }) => {
                   } else {
                     try {
                       navigator.clipboard.writeText(window.location.href);
-                    } catch (error) {}
+                    } catch {
+                      // Clipboard write failed, ignore
+                    }
                   }
                 }}
                 className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/20 text-white hover:bg-white/30 border border-white/30 transition-magazine-fast font-semibold shadow-medium backdrop-editorial"
