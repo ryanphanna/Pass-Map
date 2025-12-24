@@ -1,12 +1,12 @@
 import { ArrowRight, Gift, Sparkles } from 'lucide-react';
 import { getInstitutionById } from '../data/sampleData';
 
-const ReciprocalCard = ({ reciprocal }) => {
+const ReciprocalCard = ({ reciprocal, style }) => {
   const fromInstitution = getInstitutionById(reciprocal.fromInstitutionId);
   const toInstitution = getInstitutionById(reciprocal.toInstitutionId);
 
   return (
-    <div className="col-span-1 md:col-span-2 h-[280px] sm:h-[320px] relative overflow-hidden rounded-3xl shadow-medium hover:shadow-editorial transition-magazine cursor-pointer group hover-elevate">
+    <div style={style} className="h-full relative overflow-hidden rounded-3xl shadow-medium hover:shadow-editorial transition-magazine cursor-pointer group hover-elevate">
       {/* Sophisticated gradient background with texture */}
       <div className="absolute inset-0 bg-gradient-to-br from-accent-gold via-primary-600 to-accent-sage opacity-95" />
       <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
