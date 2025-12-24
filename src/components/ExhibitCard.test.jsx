@@ -23,7 +23,8 @@ const renderWithContext = (component) => {
 
 describe('ExhibitCard - Date Handling', () => {
   beforeEach(() => {
-    // Mock system time will be set in individual tests
+    // Reset any previous time mocks
+    vi.useRealTimers();
   });
 
   afterEach(() => {
@@ -253,8 +254,8 @@ describe('ExhibitCard - Date Handling', () => {
 
   describe('getDaysUntilEnd() - Edge Cases', () => {
     it('should use Math.ceil to round up partial days', () => {
-      // This test verifies the Math.ceil behavior
-      // When there's 1 day remaining, it shows "Ends tomorrow"
+      // This test verifies that the calculation handles partial days correctly
+      // When there's 1 day remaining (within 7 days threshold), shows "Ending Soon" badge
       const mockDate = new Date('2025-01-01T12:00:00Z');
       vi.setSystemTime(mockDate);
 
