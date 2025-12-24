@@ -25,7 +25,7 @@ const MapView = () => {
             navigator.geolocation.getCurrentPosition(
               (position) => {
                 setUserLocation(prev => ({
-                  city: prev?.city || 'Toronto',
+                  city: prev?.city || null,
                   neighborhood: prev?.neighborhood || null,
                   lat: position.coords.latitude,
                   lng: position.coords.longitude

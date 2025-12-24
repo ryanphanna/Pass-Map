@@ -59,7 +59,7 @@ const MapBounds = ({ institutions, userLocation }) => {
 };
 
 const Map = ({ institutions = [], userLocation = null, onInstitutionClick = null }) => {
-  // Default center (Toronto)
+  // Default center
   const defaultCenter = [43.6532, -79.3832];
   const center = userLocation?.lat && userLocation?.lng 
     ? [userLocation.lat, userLocation.lng]
