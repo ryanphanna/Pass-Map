@@ -105,145 +105,146 @@ const Discover = ({ onNavigate }) => {
     }
   ];
 
-  // Create a fluid mood board grid mixing all content types
+  // Create a fluid mood board grid mixing all content types with INTELLIGENT PACKING
   const createMoodBoardGrid = () => {
-    const items = [];
-    let tipIndex = 0;
+    const rawItems = [];
 
-    // Add ending soon exhibits first (they're urgent)
+    // Gather all available content (same priority logic as before)
+    
+    // Priority 1: Ending soon (urgent!)
     if (endingSoon.length > 0) {
-      items.push({
-        type: 'exhibit',
-        data: endingSoon[0],
-        size: 'large', // Hero card
-        priority: 1
-      });
-
+      rawItems.push({ type: 'exhibit', data: endingSoon[0], priority: 1 });
       if (endingSoon.length > 1) {
-        items.push({
-          type: 'exhibit',
-          data: endingSoon[1],
-          size: 'medium',
-          priority: 1
-        });
+        rawItems.push({ type: 'exhibit', data: endingSoon[1], priority: 1 });
       }
     }
 
-    // Add a tip about timing or free access
+    // Priority 2: Free access + tip
     if (freeAccess.length > 0 && culturalTips[1]) {
-      items.push({
-        type: 'tip',
-        data: culturalTips[1], // Free culture nights tip
-        size: 'medium',
-        priority: 2
-      });
+      rawItems.push({ type: 'tip', data: culturalTips[1], priority: 2 });
     }
-
-    // Add free access exhibits
     if (freeAccess.length > 0) {
-      items.push({
-        type: 'exhibit',
-        data: freeAccess[0],
-        size: 'medium',
-        priority: 2
-      });
-
+      rawItems.push({ type: 'exhibit', data: freeAccess[0], priority: 2 });
       if (freeAccess.length > 1) {
-        items.push({
-          type: 'exhibit',
-          data: freeAccess[1],
-          size: 'small',
-          priority: 2
-        });
+        rawItems.push({ type: 'exhibit', data: freeAccess[1], priority: 2 });
       }
     }
 
-    // Add reciprocal benefits if user has memberships
+    // Priority 3: Reciprocal benefits
     if (userReciprocals.length > 0) {
-      // Add reciprocal tip first
       if (culturalTips[0]) {
-        items.push({
-          type: 'tip',
-          data: culturalTips[0], // Membership tip
-          size: 'small',
-          priority: 3
-        });
+        rawItems.push({ type: 'tip', data: culturalTips[0], priority: 3 });
       }
-
-      items.push({
-        type: 'reciprocal',
-        data: userReciprocals[0],
-        size: 'medium',
-        priority: 3
+      userReciprocals.slice(0, 2).forEach(recip => {
+        rawItems.push({ type: 'reciprocal', data: recip, priority: 3 });
       });
-
-      if (userReciprocals.length > 1) {
-        items.push({
-          type: 'reciprocal',
-          data: userReciprocals[1],
-          size: 'medium',
-          priority: 3
-        });
-      }
     }
 
-    // Add visiting tips
+    // Priority 4: More tips
     if (culturalTips[2]) {
-      items.push({
-        type: 'tip',
-        data: culturalTips[2], // Weekday mornings tip
-        size: 'small',
-        priority: 4
-      });
+      rawItems.push({ type: 'tip', data: culturalTips[2], priority: 4 });
     }
 
-    // Add interest-matched exhibits
+    // Priority 5: Interest-matched exhibits
     const availableInterestMatched = interestMatched
       .filter(ex => !endingSoon.includes(ex) && !freeAccess.includes(ex))
-      .slice(0, 6);
-
-    availableInterestMatched.forEach((exhibit, idx) => {
-      const size = idx === 0 ? 'large' : idx % 3 === 0 ? 'medium' : 'small';
-      items.push({
-        type: 'exhibit',
-        data: exhibit,
-        size,
-        priority: 5
-      });
+      .slice(0, 10);
+    availableInterestMatched.forEach(exhibit => {
+      rawItems.push({ type: 'exhibit', data: exhibit, priority: 5 });
     });
 
-    // Sprinkle more tips throughout
+    // More tips sprinkled in
     if (culturalTips[3]) {
-      items.splice(Math.floor(items.length / 2), 0, {
-        type: 'tip',
-        data: culturalTips[3], // Explore by neighborhood
-        size: 'medium',
-        priority: 4
-      });
+      rawItems.splice(Math.floor(rawItems.length * 0.5), 0, 
+        { type: 'tip', data: culturalTips[3], priority: 4 });
     }
-
     if (culturalTips[4]) {
-      items.splice(Math.floor(items.length * 0.7), 0, {
-        type: 'tip',
-        data: culturalTips[4], // Special exhibits tip
-        size: 'small',
-        priority: 4
-      });
+      rawItems.splice(Math.floor(rawItems.length * 0.7), 0, 
+        { type: 'tip', data: culturalTips[4], priority: 4 });
     }
 
-    // Add not recently visited exhibits
-    if (notRecentlyVisited.length > 0) {
-      notRecentlyVisited.forEach((exhibit) => {
-        items.push({
-          type: 'exhibit',
-          data: exhibit,
-          size: 'medium',
-          priority: 6
-        });
-      });
-    }
+    // Priority 6: Not recently visited
+    notRecentlyVisited.forEach(exhibit => {
+      rawItems.push({ type: 'exhibit', data: exhibit, priority: 6 });
+    });
 
-    return items;
+    // SMART PACKING ALGORITHM - NO MORE GAPS!
+    // Grid is 4 columns. Sizes: wide=4, large=3, medium=2, small=1
+    const packed = [];
+    let rowWidth = 0;
+    const GRID_COLS = 4;
+
+    const getSizeForItem = (item, index) => {
+      // First item should be hero
+      if (index === 0 && item.priority === 1) return 'large';
+      
+      // Reciprocals always medium (they span 2 cols in their component)
+      if (item.type === 'reciprocal') return 'medium';
+      
+      // Vary tip sizes for visual interest
+      if (item.type === 'tip') {
+        return index % 3 === 0 ? 'medium' : 'small';
+      }
+      
+      // Exhibits get variety based on priority
+      if (item.type === 'exhibit') {
+        // High priority = bigger cards
+        if (item.priority <= 2) {
+          return index % 5 === 0 ? 'large' : index % 3 === 0 ? 'medium' : 'small';
+        }
+        // Lower priority = mostly medium/small
+        return index % 4 === 0 ? 'medium' : 'small';
+      }
+      
+      return 'small';
+    };
+
+    const getColSpan = (size) => {
+      switch(size) {
+        case 'wide': return 4;
+        case 'large': return 3;
+        case 'medium': return 2;
+        case 'small': return 1;
+        default: return 1;
+      }
+    };
+
+    rawItems.forEach((item, index) => {
+      const desiredSize = getSizeForItem(item, index);
+      let size = desiredSize;
+      let cols = getColSpan(size);
+
+      // INTELLIGENT PACKING: If item doesn't fit in current row, downsize it
+      const spaceLeft = GRID_COLS - rowWidth;
+      
+      if (cols > spaceLeft) {
+        // Item won't fit - try to find a size that WILL fit
+        if (spaceLeft >= 2) {
+          size = 'medium';
+          cols = 2;
+        } else if (spaceLeft >= 1) {
+          size = 'small';
+          cols = 1;
+        } else {
+          // No space left in row - start new row
+          rowWidth = 0;
+          // Keep original size for new row
+          size = desiredSize;
+          cols = getColSpan(size);
+        }
+      }
+
+      // Add item with its final size
+      packed.push({ ...item, size });
+      rowWidth += cols;
+
+      // Reset row if we've filled it exactly
+      if (rowWidth >= GRID_COLS) {
+        rowWidth = 0;
+      }
+    });
+
+    return packed;
   };
 
   const moodBoardItems = createMoodBoardGrid();
@@ -270,7 +271,7 @@ const Discover = ({ onNavigate }) => {
         </div>
       </div>
 
-      {/* Mood Board Grid - Fluid bento layout */}
+      {/* Mood Board Grid - Fluid bento layout with NO GAPS */}
       <div className="max-w-7xl mx-auto px-6 sm:px-8 -mt-8">
         {moodBoardItems.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-4 gap-editorial">
