@@ -37,10 +37,10 @@ const ExhibitCard = ({ exhibit, size = 'medium', onClick }) => {
   };
 
   const heightClasses = {
-    small: 'h-[320px] sm:h-[380px]',
-    medium: 'h-[420px] sm:h-[480px]',
-    large: 'h-[500px] sm:h-[580px] md:h-[650px]',
-    wide: 'h-[400px] sm:h-[450px]'
+    small: 'h-[400px] sm:h-[450px]',
+    medium: 'h-[500px] sm:h-[550px]',
+    large: 'h-[600px] sm:h-[700px] md:h-[750px]',
+    wide: 'h-[450px] sm:h-[500px]'
   };
 
   // Sophisticated overlay based on card size and variant
@@ -140,29 +140,29 @@ const ExhibitCard = ({ exhibit, size = 'medium', onClick }) => {
           )}
         </div>
 
-        {/* Content - improved hierarchy */}
-        <div className={`absolute bottom-0 left-0 right-0 ${size === 'large' ? 'p-8 sm:p-10' : size === 'wide' ? 'p-6 sm:p-8' : 'p-5 sm:p-7'}`}>
+        {/* Content - MUCH bolder typography */}
+        <div className={`absolute bottom-0 left-0 right-0 ${size === 'large' ? 'p-8 sm:p-12' : size === 'wide' ? 'p-6 sm:p-8' : 'p-6 sm:p-8'}`}>
           {/* Institution - more elegant */}
-          <div className="flex items-center gap-2 mb-3">
-            <div className="w-1 h-1 rounded-full bg-accent-gold" />
-            <span className="text-overline text-white/80 tracking-wide">
+          <div className="flex items-center gap-2 mb-4">
+            <div className="w-1.5 h-1.5 rounded-full bg-accent-gold" />
+            <span className="text-overline text-white/90 tracking-wider">
               {institution?.name}
             </span>
           </div>
 
-          {/* Title - bold magazine typography */}
+          {/* Title - MASSIVELY BOLD magazine typography */}
           <h3 className={`
-            font-bold text-white mb-3 line-clamp-2 text-shadow-editorial
-            ${size === 'large' ? 'text-title-lg sm:text-headline' : size === 'wide' ? 'text-title sm:text-title-lg' : 'text-xl sm:text-title'}
+            font-black text-white mb-4 line-clamp-2 text-shadow-editorial leading-none tracking-tighter
+            ${size === 'large' ? 'text-5xl sm:text-6xl md:text-7xl' : size === 'wide' ? 'text-3xl sm:text-4xl md:text-5xl' : 'text-2xl sm:text-3xl md:text-4xl'}
           `}>
             {exhibit.title}
           </h3>
 
           {/* Description - refined typography */}
-          {(size === 'large' || size === 'wide' || size === 'medium') && (
+          {(size === 'large' || size === 'wide') && (
             <p className={`
-              text-white/85 mb-4 line-clamp-2 text-shadow-soft leading-magazine
-              ${size === 'large' ? 'text-body-lg' : 'text-body'}
+              text-white/90 mb-5 line-clamp-2 text-shadow-soft leading-relaxed
+              ${size === 'large' ? 'text-xl sm:text-2xl' : 'text-lg sm:text-xl'}
             `}>
               {exhibit.description}
             </p>
