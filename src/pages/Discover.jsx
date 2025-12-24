@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useApp } from '../context/AppContext';
 import ExhibitCard from '../components/ExhibitCard';
 import ExhibitDetail from '../components/ExhibitDetail';
@@ -26,14 +26,18 @@ const Discover = ({ onNavigate }) => {
   const [sortedInstitutions, setSortedInstitutions] = useState(institutions);
   const [locationPermission, setLocationPermission] = useState('prompt'); // 'granted', 'denied', 'prompt'
 
-  // Check if this is the user's first visit
+  // Check if this is the user's first visit - initialize onboarding state
+  const [hasCheckedOnboarding, setHasCheckedOnboarding] = useState(false);
+  
   useEffect(() => {
-    const hasSeenOnboarding = localStorage.getItem('hasSeenOnboarding');
-    if (!hasSeenOnboarding) {
-      // Use setTimeout to avoid synchronous state update in effect
-      setTimeout(() => setShowOnboarding(true), 0);
+    if (!hasCheckedOnboarding) {
+      const hasSeenOnboarding = localStorage.getItem('hasSeenOnboarding');
+      if (!hasSeenOnboarding) {
+        setShowOnboarding(true);
+      }
+      setHasCheckedOnboarding(true);
     }
-  }, []);
+  }, [hasCheckedOnboarding]);
 
   // Request user's geolocation
   useEffect(() => {
@@ -70,15 +74,16 @@ const Discover = ({ onNavigate }) => {
   }, [setUserLocation]); // Only depend on setUserLocation (stable function)
 
   // Sort institutions by distance when user location changes
-  useEffect(() => {
+  const sortedInstitutionsByDistance = useMemo(() => {
     if (userLocation?.lat && userLocation?.lng) {
-      const sorted = sortByDistance(institutions, userLocation);
-      // Use setTimeout to avoid synchronous state update in effect
-      setTimeout(() => setSortedInstitutions(sorted), 0);
-    } else {
-      setTimeout(() => setSortedInstitutions(institutions), 0);
+      return sortByDistance(institutions, userLocation);
     }
+    return institutions;
   }, [userLocation]);
+
+  useEffect(() => {
+    setSortedInstitutions(sortedInstitutionsByDistance);
+  }, [sortedInstitutionsByDistance]);
 
   const handleCloseOnboarding = () => {
     setShowOnboarding(false);

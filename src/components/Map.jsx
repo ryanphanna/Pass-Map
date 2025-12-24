@@ -17,14 +17,17 @@ L.Icon.Default.mergeOptions({
   shadowUrl: markerShadow,
 });
 
+// SVG for user location marker
+const userLocationSvg = `
+  <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="10" fill="#3B82F6" fill-opacity="0.2"/>
+    <circle cx="12" cy="12" r="3" fill="#3B82F6"/>
+  </svg>
+`;
+
 // Custom icon for user location
 const userIcon = new L.Icon({
-  iconUrl: 'data:image/svg+xml;base64,' + btoa(`
-    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="12" cy="12" r="10" fill="#3B82F6" fill-opacity="0.2"/>
-      <circle cx="12" cy="12" r="3" fill="#3B82F6"/>
-    </svg>
-  `),
+  iconUrl: 'data:image/svg+xml;base64,' + btoa(userLocationSvg),
   iconSize: [32, 32],
   iconAnchor: [16, 16],
   popupAnchor: [0, -16],
