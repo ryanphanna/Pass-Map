@@ -3,7 +3,7 @@ import { Bookmark, Clock, MapPin, Gift, Sparkles } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { getInstitutionById } from '../data/sampleData';
 
-const ExhibitCard = ({ exhibit, size = 'medium', onClick }) => {
+const ExhibitCard = ({ exhibit, size = 'medium', onClick, style }) => {
   const { isExhibitSaved, toggleSavedExhibit } = useApp();
   const institution = getInstitutionById(exhibit.institutionId);
   const isSaved = isExhibitSaved(exhibit.id);
@@ -33,14 +33,16 @@ const ExhibitCard = ({ exhibit, size = 'medium', onClick }) => {
     small: 'col-span-1',
     medium: 'col-span-1 md:col-span-2',
     large: 'col-span-1 md:col-span-2 lg:col-span-3',
-    wide: 'col-span-full'
+    wide: 'col-span-full',
+    custom: '' // For grid positioning
   };
 
   const heightClasses = {
     small: 'h-[400px] sm:h-[450px]',
     medium: 'h-[500px] sm:h-[550px]',
     large: 'h-[600px] sm:h-[700px] md:h-[750px]',
-    wide: 'h-[450px] sm:h-[500px]'
+    wide: 'h-[450px] sm:h-[500px]',
+    custom: 'h-full' // Fill grid cell
   };
 
   // Sophisticated overlay based on card size and variant
@@ -73,6 +75,7 @@ const ExhibitCard = ({ exhibit, size = 'medium', onClick }) => {
       tabIndex={0}
       role="button"
       aria-label={`View details for ${exhibit.title}`}
+      style={style}
       className={`
         ${sizeClasses[size]}
         ${heightClasses[size]}
