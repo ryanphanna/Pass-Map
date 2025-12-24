@@ -1,89 +1,26 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState } from 'react';
 import { useApp } from '../context/AppContext';
 import ExhibitCard from '../components/ExhibitCard';
 import ExhibitDetail from '../components/ExhibitDetail';
 import ReciprocalCard from '../components/ReciprocalCard';
 import TipCard from '../components/TipCard';
 import Onboarding from '../components/Onboarding';
-import Map from '../components/Map';
 import {
   exhibits,
-  institutions,
   getExhibitsEndingSoon,
   getFreeAccessOpportunities,
   getExhibitsByInterests,
   reciprocalBenefits
 } from '../data/sampleData';
-import { sortByDistance } from '../utils/distance';
-import { Sparkles, MapPin, Map as MapIcon, Grid, Navigation as NavigationIcon } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 
 const Discover = ({ onNavigate }) => {
-  const { userInterests, userMemberships, visitHistory, userLocation, setUserLocation } = useApp();
+  const { userInterests, userMemberships, visitHistory } = useApp();
   const [selectedExhibit, setSelectedExhibit] = useState(null);
-  const [showOnboarding, setShowOnboarding] = useState(false);
-  const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'map'
-  const [showNearMeOnly, setShowNearMeOnly] = useState(false);
-  const [sortedInstitutions, setSortedInstitutions] = useState(institutions);
-  const [locationPermission, setLocationPermission] = useState('prompt'); // 'granted', 'denied', 'prompt'
-
-  // Check if this is the user's first visit - initialize onboarding state
-  const [hasCheckedOnboarding, setHasCheckedOnboarding] = useState(false);
-  
-  useEffect(() => {
-    if (!hasCheckedOnboarding) {
-      const hasSeenOnboarding = localStorage.getItem('hasSeenOnboarding');
-      if (!hasSeenOnboarding) {
-        setShowOnboarding(true);
-      }
-      setHasCheckedOnboarding(true);
-    }
-  }, [hasCheckedOnboarding]);
-
-  // Request user's geolocation
-  useEffect(() => {
-    const getUserLocation = async () => {
-      if ('geolocation' in navigator) {
-        try {
-          const permission = await navigator.permissions.query({ name: 'geolocation' });
-          setLocationPermission(permission.state);
-
-          if (permission.state === 'granted' || permission.state === 'prompt') {
-            navigator.geolocation.getCurrentPosition(
-              (position) => {
-                setUserLocation(prev => ({
-                  city: prev?.city || 'Toronto',
-                  neighborhood: prev?.neighborhood || null,
-                  lat: position.coords.latitude,
-                  lng: position.coords.longitude
-                }));
-                setLocationPermission('granted');
-              },
-              (error) => {
-                console.log('Geolocation error:', error);
-                setLocationPermission('denied');
-              }
-            );
-          }
-        } catch (error) {
-          console.log('Permission query error:', error);
-        }
-      }
-    };
-
-    getUserLocation();
-  }, [setUserLocation]); // Only depend on setUserLocation (stable function)
-
-  // Sort institutions by distance when user location changes
-  const sortedInstitutionsByDistance = useMemo(() => {
-    if (userLocation?.lat && userLocation?.lng) {
-      return sortByDistance(institutions, userLocation);
-    }
-    return institutions;
-  }, [userLocation]);
-
-  useEffect(() => {
-    setSortedInstitutions(sortedInstitutionsByDistance);
-  }, [sortedInstitutionsByDistance]);
+  const [showOnboarding, setShowOnboarding] = useState(() => {
+    const hasSeenOnboarding = localStorage.getItem('hasSeenOnboarding');
+    return !hasSeenOnboarding;
+  });
 
   const handleCloseOnboarding = () => {
     setShowOnboarding(false);
@@ -101,16 +38,6 @@ const Discover = ({ onNavigate }) => {
   const endingSoon = getExhibitsEndingSoon(30);
   const freeAccess = getFreeAccessOpportunities();
   const interestMatched = getExhibitsByInterests(userInterests);
-
-  // Filter institutions for "Near me" (within 10km)
-  const getFilteredInstitutions = () => {
-    if (showNearMeOnly && userLocation?.lat && userLocation?.lng) {
-      return sortedInstitutions.filter(inst => inst.distance && inst.distance <= 10);
-    }
-    return sortedInstitutions;
-  };
-
-  const filteredInstitutions = getFilteredInstitutions();
 
   // Get reciprocal benefits for user's memberships
   const userReciprocals = reciprocalBenefits.filter(rb =>
@@ -372,86 +299,8 @@ const Discover = ({ onNavigate }) => {
         </div>
       </div>
 
-      {/* View Controls & Location Info */}
-      <div className="max-w-7xl mx-auto px-6 sm:px-8 -mt-8 mb-6">
-        <div className="bg-white rounded-2xl shadow-soft p-4 flex flex-wrap items-center justify-between gap-4">
-          {/* View Mode Toggle */}
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setViewMode('grid')}
-              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                viewMode === 'grid'
-                  ? 'bg-primary-700 text-white'
-                  : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
-              }`}
-            >
-              <Grid size={18} className="inline mr-2" />
-              Grid
-            </button>
-            <button
-              onClick={() => setViewMode('map')}
-              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                viewMode === 'map'
-                  ? 'bg-primary-700 text-white'
-                  : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
-              }`}
-            >
-              <MapIcon size={18} className="inline mr-2" />
-              Map
-            </button>
-          </div>
-
-          {/* Near Me Filter */}
-          {userLocation?.lat && userLocation?.lng && (
-            <div className="flex items-center gap-3">
-              <button
-                onClick={() => setShowNearMeOnly(!showNearMeOnly)}
-                className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 ${
-                  showNearMeOnly
-                    ? 'bg-accent-sage text-white'
-                    : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
-                }`}
-              >
-                <NavigationIcon size={18} />
-                Near Me (10km)
-              </button>
-              <span className="text-sm text-neutral-600">
-                {filteredInstitutions.length} institution{filteredInstitutions.length !== 1 ? 's' : ''}
-              </span>
-            </div>
-          )}
-
-          {/* Location Status */}
-          {locationPermission === 'denied' && (
-            <div className="text-sm text-neutral-600 flex items-center gap-2">
-              <MapPin size={16} />
-              <span>Enable location for distance info</span>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Map View */}
-      {viewMode === 'map' && (
-        <div className="max-w-7xl mx-auto px-6 sm:px-8 mb-8">
-          <Map
-            institutions={filteredInstitutions}
-            userLocation={userLocation}
-            onInstitutionClick={(institution) => {
-              // Find exhibits for this institution and show the first one
-              const institutionExhibits = exhibits.filter(
-                ex => ex.institutionId === institution.id
-              );
-              if (institutionExhibits.length > 0) {
-                setSelectedExhibit(institutionExhibits[0]);
-              }
-            }}
-          />
-        </div>
-      )}
-
       {/* Mood Board Grid - Fluid bento layout with 2D packing */}
-      <div className="max-w-7xl mx-auto px-6 sm:px-8">
+      <div className="max-w-7xl mx-auto px-6 sm:px-8 -mt-8">
         {moodBoardItems.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-4 gap-editorial auto-rows-[320px]">
             {moodBoardItems.map((item, index) => {
