@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useApp } from '../context/AppContext';
 import ExhibitCard from '../components/ExhibitCard';
 import ExhibitDetail from '../components/ExhibitDetail';
@@ -10,17 +10,23 @@ import {
   getExhibitsEndingSoon,
   getFreeAccessOpportunities,
   getExhibitsByInterests,
-  reciprocalBenefits
+  reciprocalBenefits,
+  getInstitutionById
 } from '../data/sampleData';
 import { Sparkles } from 'lucide-react';
 
 const Discover = ({ onNavigate }) => {
-  const { userInterests, userMemberships, visitHistory } = useApp();
+  const { userInterests, userMemberships, visitHistory, userLocation } = useApp();
   const [selectedExhibit, setSelectedExhibit] = useState(null);
-  const [showOnboarding, setShowOnboarding] = useState(() => {
+  const [showOnboarding, setShowOnboarding] = useState(false);
+
+  // Check if this is the user's first visit
+  useEffect(() => {
     const hasSeenOnboarding = localStorage.getItem('hasSeenOnboarding');
-    return !hasSeenOnboarding;
-  });
+    if (!hasSeenOnboarding) {
+      setShowOnboarding(true);
+    }
+  }, []);
 
   const handleCloseOnboarding = () => {
     setShowOnboarding(false);
@@ -40,12 +46,24 @@ const Discover = ({ onNavigate }) => {
   const interestMatched = getExhibitsByInterests(userInterests);
 
   // Get reciprocal benefits for user's memberships
-  const userReciprocals = reciprocalBenefits.filter(rb =>
-    userMemberships.some(m =>
+  // BUT exclude ones where user already has access to the destination
+  const userReciprocals = reciprocalBenefits.filter(rb => {
+    // Do you have the "from" membership?
+    const hasFromMembership = userMemberships.some(m =>
       m.institutionId === rb.fromInstitutionId &&
       m.tier === rb.membershipTier
-    )
-  );
+    );
+    
+    if (!hasFromMembership) return false;
+    
+    // Do you already have the "to" membership?
+    const hasToMembership = userMemberships.some(m =>
+      m.institutionId === rb.toInstitutionId
+    );
+    
+    // Only show if you DON'T already have access to destination
+    return !hasToMembership;
+  });
 
   // Find institutions user hasn't visited in a while (or at all)
   const getNotRecentlyVisited = () => {
@@ -179,37 +197,110 @@ const Discover = ({ onNavigate }) => {
       grid[row][col] = value;
     };
 
-    // Get size dimensions for an item: [cols, rows]
-    const getSizeForItem = (item, index) => {
-      // First item should be hero (2×2)
-      if (index === 0 && item.priority === 1) return [2, 2];
+    // SCORING SYSTEM - Calculate relevance score for each item
+    // Higher score = larger card size
+    const calculateRelevanceScore = (item, index) => {
+      let score = 0;
       
-      // Reciprocals: wide rectangles (2×1) - always single row
-      if (item.type === 'reciprocal') return [2, 1];
+      // BASE SCORES by content type
+      if (item.type === 'exhibit') score += 5;
+      if (item.type === 'reciprocal') score += 3;
+      if (item.type === 'tip') score += 1;
       
-      // Tips: mostly small, occasional variety
+      // TIPS always stay small regardless of other factors
       if (item.type === 'tip') {
-        if (index % 7 === 0) return [2, 2]; // Rare large square
-        if (index % 4 === 0) return [2, 1]; // Occasional wide
-        return [1, 1]; // Mostly small squares
+        return score; // Return early, tips don't get boosted
       }
       
-      // Exhibits: create variety but favor smaller sizes
-      if (item.type === 'exhibit') {
-        if (item.priority <= 2) {
-          // High priority exhibits get occasional big sizes
-          if (index % 6 === 0) return [2, 2]; // Rare large square
-          if (index % 4 === 0) return [1, 2]; // Occasional tall
-          if (index % 3 === 0) return [2, 1]; // Occasional wide
-          return [1, 1]; // Mostly small
+      // RECIPROCAL-SPECIFIC SCORING
+      if (item.type === 'reciprocal') {
+        const reciprocal = item.data;
+        
+        // Penalty if you already have destination membership
+        const alreadyHasDestination = userMemberships.some(m => 
+          m.institutionId === reciprocal.toInstitutionId
+        );
+        if (alreadyHasDestination) {
+          score -= 8; // Big penalty - you don't need this
         }
-        // Lower priority = almost all small, with rare variety
-        if (index % 8 === 0) return [2, 1]; // Very occasional wide
-        if (index % 10 === 0) return [1, 2]; // Very occasional tall
-        return [1, 1]; // Default small
+        
+        return score;
       }
       
-      return [1, 1]; // Default: small square
+      // EXHIBIT-SPECIFIC SCORING
+      if (item.type === 'exhibit') {
+        const exhibit = item.data;
+        
+        // Calculate days until ending
+        const getDaysUntilEnd = () => {
+          if (!exhibit.endDate || exhibit.isPermanent) return null;
+          const now = new Date();
+          const end = new Date(exhibit.endDate);
+          const diffTime = end - now;
+          return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        };
+        const daysLeft = getDaysUntilEnd();
+        
+        // URGENCY BOOST - ending soon is important!
+        if (daysLeft !== null) {
+          if (daysLeft <= 3) score += 10;      // URGENT!
+          else if (daysLeft <= 7) score += 7;  // Very soon
+          else if (daysLeft <= 14) score += 4; // Coming up
+          else if (daysLeft <= 30) score += 2; // This month
+        }
+        
+        // INTEREST MATCH BOOST
+        const matchesInterests = exhibit.interests?.some(i => 
+          userInterests.includes(i)
+        );
+        if (matchesInterests) score += 5;
+        
+        // MEMBERSHIP BOOST - you have access
+        const hasMembership = userMemberships.some(m => 
+          m.institutionId === exhibit.institutionId
+        );
+        if (hasMembership) score += 4;
+        
+        // FREE ACCESS BOOST - but only if you don't already have membership
+        if (exhibit.isFree && !hasMembership) {
+          score += 6; // Free is valuable when you don't have membership
+        }
+        if (exhibit.isFree && hasMembership) {
+          score -= 2; // Free doesn't matter if you already have access
+        }
+        
+        // VISIT HISTORY PENALTY - already been recently
+        const recentlyVisited = visitHistory.some(v => {
+          if (v.institutionId !== exhibit.institutionId) return false;
+          const lastVisit = new Date(v.lastVisit);
+          const threeMonthsAgo = new Date();
+          threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+          return lastVisit > threeMonthsAgo;
+        });
+        if (recentlyVisited) score -= 4;
+        
+        // PERMANENT COLLECTION PENALTY - can see anytime
+        if (exhibit.isPermanent) score -= 3;
+        
+        // FIRST ITEM BOOST - hero card
+        if (index === 0) score += 3;
+      }
+      
+      return score;
+    };
+    
+    // Convert score to card size [cols, rows]
+    const scoreToSize = (score) => {
+      if (score >= 15) return [2, 2]; // Large square - very important
+      if (score >= 10) return [2, 1]; // Wide - important
+      if (score >= 7) return [1, 2];  // Tall - notable
+      return [1, 1]; // Small - standard
+    };
+    
+    // Get size for an item using the scoring system
+    const getSizeForItem = (item, index) => {
+      const score = calculateRelevanceScore(item, index);
+      return scoreToSize(score);
     };
 
     // Find the next available position for a card of given size
