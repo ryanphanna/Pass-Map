@@ -94,14 +94,14 @@ const ExhibitCard = ({ exhibit, size = 'medium', onClick, style }) => {
             className="absolute inset-0 w-full h-full object-cover image-magazine"
           />
         ) : (
-          <div className="absolute inset-0 w-full h-full flex items-center justify-center bg-gradient-to-br from-primary-800 via-neutral-800 to-accent-slate">
+          <div className="absolute inset-0 w-full h-full flex items-center justify-center bg-gradient-to-br from-neutral-900 via-neutral-800 to-neutral-700">
             <div className="text-center px-8">
-              <Sparkles className="mx-auto mb-4 text-accent-gold opacity-40" size={size === 'large' ? 64 : 48} strokeWidth={1.5} />
-              <div className="text-sm text-white/40 font-medium">{institution?.name}</div>
+              <Sparkles className="mx-auto mb-4 text-accent-gold opacity-60" size={size === 'large' ? 64 : 48} strokeWidth={1.5} />
+              <div className="text-sm text-white/60 font-medium">{institution?.name}</div>
             </div>
           </div>
         )}
-        {/* Sophisticated gradient overlay */}
+        {/* Sophisticated gradient overlay - ALWAYS applied */}
         <div className={`absolute inset-0 ${getOverlayStyle()}`} />
 
         {/* Save button - refined design */}
