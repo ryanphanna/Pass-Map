@@ -234,7 +234,7 @@ const Settings = () => {
               </div>
               <div>
                 <div className="text-lg font-bold text-neutral-900">
-                  {userLocation.city}
+                  {userLocation.city || 'Not set'}
                 </div>
                 {userLocation.neighborhood && (
                   <div className="text-sm text-neutral-600 font-medium mt-0.5">
