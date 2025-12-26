@@ -55,7 +55,7 @@ const ExhibitDetail = ({ exhibit, onClose }) => {
         </button>
 
         {/* FULL-BLEED HERO IMAGE with overlaid title - magazine spread style */}
-        <div className="relative h-[60vh] md:h-[70vh] overflow-hidden md:rounded-t-3xl">
+        <div className="relative h-[45vh] sm:h-[55vh] md:h-[70vh] overflow-hidden md:rounded-t-3xl flex-shrink-0">
           <img
             src={exhibit.image}
             alt={exhibit.title}
@@ -88,7 +88,7 @@ const ExhibitDetail = ({ exhibit, onClose }) => {
           </div>
 
           {/* Title and institution overlaid on image - magazine hero style */}
-          <div className="absolute bottom-0 left-0 right-0 p-8 md:p-12">
+          <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-8 md:p-12">
             {/* Institution name - elegant overline */}
             <div className="flex items-center gap-2 mb-4">
               <div className="w-1 h-1 rounded-full bg-accent-gold" />
@@ -100,7 +100,7 @@ const ExhibitDetail = ({ exhibit, onClose }) => {
             {/* Exhibit title - bold magazine typography */}
             <h2
               id="exhibit-detail-title"
-              className="text-headline md:text-display-sm font-black text-white mb-4 text-shadow-editorial leading-none max-w-4xl"
+              className="text-2xl sm:text-headline md:text-display-sm font-black text-white mb-4 text-shadow-editorial leading-tight max-w-4xl break-words"
             >
               {exhibit.title}
             </h2>
@@ -151,15 +151,15 @@ const ExhibitDetail = ({ exhibit, onClose }) => {
         </div>
 
         {/* EDITORIAL CONTENT - Flowing magazine article style */}
-        <div className="p-8 md:p-12 lg:p-16 max-w-4xl mx-auto">
+        <div className="p-6 sm:p-8 md:p-12 lg:p-16 max-w-4xl mx-auto">
 
           {/* Description - lead paragraph style with generous spacing */}
-          <p className="text-body-lg md:text-title text-neutral-800 leading-magazine mb-12">
+          <p className="text-body md:text-body-lg lg:text-title text-neutral-800 leading-relaxed md:leading-magazine mb-8 md:mb-12 break-words">
             {exhibit.description}
           </p>
 
           {/* Key Information Grid - Minimal, not list-like */}
-          <div className="grid md:grid-cols-2 gap-8 mb-12">
+          <div className="grid md:grid-cols-2 gap-6 md:gap-8 mb-8 md:mb-12">
 
             {/* Hours - if available */}
             {institution?.hours && (

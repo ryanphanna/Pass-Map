@@ -155,8 +155,8 @@ const ExhibitCard = ({ exhibit, size = 'medium', onClick, style }) => {
 
           {/* Title - MASSIVELY BOLD magazine typography */}
           <h3 className={`
-            font-black text-white mb-4 line-clamp-2 text-shadow-editorial leading-none tracking-tighter
-            ${size === 'large' ? 'text-5xl sm:text-6xl md:text-7xl' : size === 'wide' ? 'text-3xl sm:text-4xl md:text-5xl' : 'text-2xl sm:text-3xl md:text-4xl'}
+            font-black text-white mb-4 line-clamp-2 text-shadow-editorial leading-tight tracking-tight break-words
+            ${size === 'large' ? 'text-4xl sm:text-5xl md:text-6xl lg:text-7xl' : size === 'wide' ? 'text-2xl sm:text-3xl md:text-4xl lg:text-5xl' : 'text-xl sm:text-2xl md:text-3xl lg:text-4xl'}
           `}>
             {exhibit.title}
           </h3>

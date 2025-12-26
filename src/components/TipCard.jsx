@@ -90,16 +90,16 @@ const TipCard = ({ tip, size = 'medium', style }) => {
 
           {/* Tip content - MASSIVE editorial typography */}
           <h3 className={`
-            font-black ${visualStyle.textColor} mb-4 leading-none tracking-tighter
-            ${size === 'large' ? 'text-4xl sm:text-5xl md:text-6xl' : size === 'medium' ? 'text-3xl sm:text-4xl md:text-5xl' : 'text-2xl sm:text-3xl'}
+            font-black ${visualStyle.textColor} mb-4 leading-tight tracking-tight break-words
+            ${size === 'large' ? 'text-2xl sm:text-3xl md:text-4xl lg:text-5xl' : size === 'medium' ? 'text-xl sm:text-2xl md:text-3xl lg:text-4xl' : 'text-lg sm:text-xl md:text-2xl'}
           `}>
             {tip.title}
           </h3>
 
           {tip.description && (
             <p className={`
-              ${visualStyle.textColor} opacity-90 leading-relaxed font-medium
-              ${size === 'large' ? 'text-xl sm:text-2xl' : size === 'medium' ? 'text-lg sm:text-xl' : 'text-base sm:text-lg'}
+              ${visualStyle.textColor} opacity-90 leading-relaxed font-medium break-words
+              ${size === 'large' ? 'text-base sm:text-lg md:text-xl' : size === 'medium' ? 'text-sm sm:text-base md:text-lg' : 'text-sm sm:text-base'}
               ${size === 'small' ? 'line-clamp-3' : size === 'medium' ? 'line-clamp-4' : 'line-clamp-5'}
             `}>
               {tip.description}
