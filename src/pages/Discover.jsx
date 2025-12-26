@@ -393,7 +393,7 @@ const Discover = ({ onNavigate }) => {
       {/* Mood Board Grid - Fluid bento layout with 2D packing */}
       <div className="max-w-7xl mx-auto px-6 sm:px-8 -mt-8">
         {moodBoardItems.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-6 auto-rows-[280px]">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 auto-rows-[280px]">
             {moodBoardItems.map((item, index) => {
               const gridStyle = {
                 gridColumn: item.gridColumn,
