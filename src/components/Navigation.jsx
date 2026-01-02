@@ -3,7 +3,7 @@ import { useApp } from '../context/AppContext';
 
 const Navigation = ({ currentView, setCurrentView }) => {
   const { userLocation } = useApp();
-  
+
   const navItems = [
     { id: 'discover', label: 'Discover', icon: Compass },
     { id: 'map', label: 'Map', icon: Map },
@@ -19,7 +19,7 @@ const Navigation = ({ currentView, setCurrentView }) => {
           <div className="flex items-center gap-3">
             <div className="w-1.5 h-8 bg-gradient-to-b from-accent-gold to-accent-sage rounded-full" />
             <h1 className="text-2xl font-bold text-neutral-900 tracking-tight">
-              Culture {userLocation.city || 'Discovery'}
+              Venture
             </h1>
           </div>
 

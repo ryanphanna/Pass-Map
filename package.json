@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://ryanphanna.github.io/Pass-Map/",
+  "homepage": "https://ryanphanna.github.io/Venture/",
   "scripts": {
     "dev": "vite",
     "build": "vite build && echo > dist/.nojekyll",

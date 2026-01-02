@@ -53,14 +53,14 @@ const Discover = ({ onNavigate }) => {
       m.institutionId === rb.fromInstitutionId &&
       m.tier === rb.membershipTier
     );
-    
+
     if (!hasFromMembership) return false;
-    
+
     // Do you already have the "to" membership?
     const hasToMembership = userMemberships.some(m =>
       m.institutionId === rb.toInstitutionId
     );
-    
+
     // Only show if you DON'T already have access to destination
     return !hasToMembership;
   });
@@ -123,7 +123,7 @@ const Discover = ({ onNavigate }) => {
     const rawItems = [];
 
     // Gather all available content (same priority logic as before)
-    
+
     // Priority 1: Ending soon (urgent!)
     if (endingSoon.length > 0) {
       rawItems.push({ type: 'exhibit', data: endingSoon[0], priority: 1 });
@@ -168,11 +168,11 @@ const Discover = ({ onNavigate }) => {
 
     // More tips sprinkled in
     if (culturalTips[3]) {
-      rawItems.splice(Math.floor(rawItems.length * 0.5), 0, 
+      rawItems.splice(Math.floor(rawItems.length * 0.5), 0,
         { type: 'tip', data: culturalTips[3], priority: 4 });
     }
     if (culturalTips[4]) {
-      rawItems.splice(Math.floor(rawItems.length * 0.7), 0, 
+      rawItems.splice(Math.floor(rawItems.length * 0.7), 0,
         { type: 'tip', data: culturalTips[4], priority: 4 });
     }
 
@@ -185,7 +185,7 @@ const Discover = ({ onNavigate }) => {
     // Grid is 4 columns wide, tracks occupied cells across rows
     const GRID_COLS = 4;
     const packed = [];
-    
+
     // Track which cells are occupied: grid[row][col] = true/false
     const grid = [];
     const getCell = (row, col) => {
@@ -201,36 +201,36 @@ const Discover = ({ onNavigate }) => {
     // Higher score = larger card size
     const calculateRelevanceScore = (item, index) => {
       let score = 0;
-      
+
       // BASE SCORES by content type
       if (item.type === 'exhibit') score += 5;
       if (item.type === 'reciprocal') score += 3;
       if (item.type === 'tip') score += 1;
-      
+
       // TIPS always stay small regardless of other factors
       if (item.type === 'tip') {
         return score; // Return early, tips don't get boosted
       }
-      
+
       // RECIPROCAL-SPECIFIC SCORING
       if (item.type === 'reciprocal') {
         const reciprocal = item.data;
-        
+
         // Penalty if you already have destination membership
-        const alreadyHasDestination = userMemberships.some(m => 
+        const alreadyHasDestination = userMemberships.some(m =>
           m.institutionId === reciprocal.toInstitutionId
         );
         if (alreadyHasDestination) {
           score -= 8; // Big penalty - you don't need this
         }
-        
+
         return score;
       }
-      
+
       // EXHIBIT-SPECIFIC SCORING
       if (item.type === 'exhibit') {
         const exhibit = item.data;
-        
+
         // Calculate days until ending
         const getDaysUntilEnd = () => {
           if (!exhibit.endDate || exhibit.isPermanent) return null;
@@ -240,27 +240,27 @@ const Discover = ({ onNavigate }) => {
           return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
         };
         const daysLeft = getDaysUntilEnd();
-        
+
         // URGENCY BOOST - ending soon is important!
         if (daysLeft !== null) {
-          if (daysLeft <= 3) score += 10;      // URGENT!
+          if (daysLeft <= 3) score += 40;      // URGENT!
           else if (daysLeft <= 7) score += 7;  // Very soon
           else if (daysLeft <= 14) score += 4; // Coming up
           else if (daysLeft <= 30) score += 2; // This month
         }
-        
+
         // INTEREST MATCH BOOST
-        const matchesInterests = exhibit.interests?.some(i => 
+        const matchesInterests = exhibit.interests?.some(i =>
           userInterests.includes(i)
         );
         if (matchesInterests) score += 5;
-        
+
         // MEMBERSHIP BOOST - you have access
-        const hasMembership = userMemberships.some(m => 
+        const hasMembership = userMemberships.some(m =>
           m.institutionId === exhibit.institutionId
         );
-        if (hasMembership) score += 4;
-        
+        if (hasMembership) score += 50;
+
         // FREE ACCESS BOOST - but only if you don't already have membership
         if (exhibit.isFree && !hasMembership) {
           score += 6; // Free is valuable when you don't have membership
@@ -268,7 +268,7 @@ const Discover = ({ onNavigate }) => {
         if (exhibit.isFree && hasMembership) {
           score -= 2; // Free doesn't matter if you already have access
         }
-        
+
         // VISIT HISTORY PENALTY - already been recently
         const recentlyVisited = visitHistory.some(v => {
           if (v.institutionId !== exhibit.institutionId) return false;
@@ -278,17 +278,17 @@ const Discover = ({ onNavigate }) => {
           return lastVisit > threeMonthsAgo;
         });
         if (recentlyVisited) score -= 4;
-        
+
         // PERMANENT COLLECTION PENALTY - can see anytime
         if (exhibit.isPermanent) score -= 3;
-        
+
         // FIRST ITEM BOOST - hero card
         if (index === 0) score += 3;
       }
-      
+
       return score;
     };
-    
+
     // Convert score to card size [cols, rows]
     const scoreToSize = (score) => {
       if (score >= 15) return [2, 2]; // Large square - very important
@@ -296,7 +296,7 @@ const Discover = ({ onNavigate }) => {
       if (score >= 7) return [1, 2];  // Tall - notable
       return [1, 1]; // Small - standard
     };
-    
+
     // Get size for an item using the scoring system
     const getSizeForItem = (item, index) => {
       const score = calculateRelevanceScore(item, index);
@@ -321,14 +321,14 @@ const Discover = ({ onNavigate }) => {
             }
             if (!canFit) break;
           }
-          
+
           if (canFit) {
             // Found the earliest available position!
             return { row, col };
           }
         }
       }
-      
+
       // Should never reach here
       console.error('Could not find position for card', cols, rows);
       return { row: 0, col: 0 };
@@ -346,13 +346,13 @@ const Discover = ({ onNavigate }) => {
     // Pack each item
     rawItems.forEach((item, index) => {
       let [cols, rows] = getSizeForItem(item, index);
-      
+
       // Find position for this card
       const pos = findPosition(cols, rows);
-      
+
       // Mark cells as occupied
       markOccupied(pos.row, pos.col, cols, rows);
-      
+
       // Add to packed items with grid position
       packed.push({
         ...item,
@@ -391,7 +391,7 @@ const Discover = ({ onNavigate }) => {
       </div>
 
       {/* Mood Board Grid - Fluid bento layout with 2D packing */}
-      <div className="max-w-7xl mx-auto px-6 sm:px-8 -mt-8">
+      <div className="w-full px-6 sm:px-8 -mt-8">
         {moodBoardItems.length > 0 ? (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 auto-rows-[280px]">
             {moodBoardItems.map((item, index) => {

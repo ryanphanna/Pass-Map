@@ -1,10 +1,10 @@
-# Toronto Culture Discovery App
+# Venture
 
 Discover museums, galleries, zoos, and special exhibits in Toronto with a personalized, mobile-first experience.
 
 ## What is this?
 
-Toronto Culture Discovery helps you make the most of Toronto's cultural scene. Get personalized recommendations based on your interests and memberships, discover reciprocal benefits, and never miss exhibits ending soon.
+Venture helps you make the most of Toronto's cultural scene. Get personalized recommendations based on your interests and memberships, discover reciprocal benefits, and never miss exhibits ending soon.
 
 ## Features
 

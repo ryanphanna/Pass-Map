@@ -1,6 +1,6 @@
 # 🗺️ Development Roadmap
 
-This document tracks known issues, improvements, and future enhancements for the Culture Discovery app. Items are organized by priority and can be tackled in any order.
+This document tracks known issues, improvements, and future enhancements for the Venture app. Items are organized by priority and can be tackled in any order.
 
 ---
 
@@ -30,9 +30,9 @@ This document tracks known issues, improvements, and future enhancements for the
 
 **What's Needed:**
 - Remove "Toronto" from all component text
-- Make it "Culture [CityName]" where city comes from user settings
+- Make it "Venture [CityName]" where city comes from user settings
 - Update navigation, headers, and page titles
-- `index.html` title should be dynamic or generic "Culture Discovery"
+- `index.html` title should be dynamic or generic "Venture"
 
 **Files to modify:**
 - `src/components/Navigation.jsx`
@@ -232,8 +232,8 @@ This document tracks known issues, improvements, and future enhancements for the
 - Create `manifest.json`:
 ```json
 {
-  "name": "Culture Discovery",
-  "short_name": "Culture",
+  "name": "Venture",
+  "short_name": "Venture",
   "description": "Discover cultural institutions and exhibits",
   "start_url": "/",
   "display": "standalone",
