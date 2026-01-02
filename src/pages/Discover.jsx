@@ -11,7 +11,8 @@ import {
   getFreeAccessOpportunities,
   getExhibitsByInterests,
   reciprocalBenefits,
-  getInstitutionById
+  getInstitutionById,
+  institutions
 } from '../data/sampleData';
 import { Sparkles } from 'lucide-react';
 
@@ -79,64 +80,101 @@ const Discover = ({ onNavigate }) => {
 
   const notRecentlyVisited = getNotRecentlyVisited();
 
-  // SMART TIPS GENERATION
+  // SMART TIPS GENERATION - DELIGHT & DISCOVERY FOCUSED
   const generateSmartTips = () => {
     const tips = [];
 
-    // Tip 1: Reciprocal Benefits (if user has memberships)
-    if (userMemberships.length > 0) {
+    // Tip 1: Curated Neighborhood Days (Context aware)
+    // Find clusters of institutions in the same neighborhood
+    const neighborhoodGroups = {};
+    institutions.forEach(inst => {
+      if (!inst.location || !inst.location.neighborhood) return; // Skip if no neighborhood data
+      if (!neighborhoodGroups[inst.location.neighborhood]) {
+        neighborhoodGroups[inst.location.neighborhood] = [];
+      }
+      neighborhoodGroups[inst.location.neighborhood].push(inst);
+    });
+
+    const bestNeighborhood = Object.keys(neighborhoodGroups).find(n =>
+      neighborhoodGroups[n].length >= 2
+    );
+
+    if (bestNeighborhood) {
+      const venues = neighborhoodGroups[bestNeighborhood].slice(0, 2).map(i => i.shortName).join(' and ');
       tips.push({
-        id: 'tip-reciprocal',
-        type: 'membership',
-        title: 'Maximize your membership',
-        description: `Your ${userMemberships[0].institutionId} membership might get you into other museums for free. Look for reciprocal programs.`,
-        label: 'Member Perk'
-      });
-    } else {
-      // Alternate: Membership value
-      tips.push({
-        id: 'tip-membership',
-        type: 'insider',
-        title: 'Membership pays for itself',
-        description: 'Visiting just 3 times a year usually covers the cost of an annual membership.',
-        label: 'Pro Tip'
+        id: `tip-neighborhood-${bestNeighborhood}`,
+        type: 'neighborhood',
+        title: `A Perfect Day in ${bestNeighborhood}`,
+        description: `Experience a vetted cultural dialogue: The ${neighborhoodGroups[bestNeighborhood][0].shortName} and ${neighborhoodGroups[bestNeighborhood][1].shortName} are just steps apart.`,
+        label: 'Curated Itinerary'
       });
     }
 
-    // Tip 2: Crowd Avoidance (General)
-    tips.push({
-      id: 'tip-crowds',
-      type: 'insider',
-      title: 'Skip the free-night crowds',
-      description: 'Free nights are great, but Tuesday mornings offer the quietest galleries for true contemplation.',
-      label: 'Insider Secret'
-    });
+    // Tip 2: Access & Solitude (Membership value = Experience quality)
+    if (userMemberships.length > 0) {
+      const membership = userMemberships[0];
+      const inst = getInstitutionById(membership.institutionId);
+      if (inst) {
+        tips.push({
+          id: 'tip-solitude',
+          type: 'membership',
+          title: 'Unlock Quiet Moments',
+          description: `Your ${inst.shortName} membership is your key to solitude. Visit during member hours for a private viewing experience.`,
+          label: 'Member Access'
+        });
+      }
+    } else {
+      tips.push({
+        id: 'tip-atmosphere',
+        type: 'insider',
+        title: 'See Art in a New Light',
+        description: 'Museums transform after dark. Weekday evening hours often offer a completely different, more intimate atmosphere.',
+        label: 'Atmosphere'
+      });
+    }
 
-    // Tip 3: Neighborhood based (Context aware placeholder)
-    tips.push({
-      id: 'tip-neighborhood',
-      type: 'neighborhood',
-      title: 'Make a day of it',
-      description: 'Many cultural spots are clustered. Check out nearby galleries when you visit a major museum.',
-      label: 'Explore'
-    });
+    // Tip 3: Interest-Specific Hidden Gems
+    // Recommendation logic: Find something highly specific based on interest
+    if (userInterests.length > 0) {
+      const topInterest = userInterests[0];
+      // Find an exhibit that matches this interest but ISN'T the ending soon one (avoid duplication)
+      const hiddenGem = exhibits.find(ex =>
+        ex.interests?.includes(topInterest) &&
+        !ex.isPermanent && // Temporary shows are more "delightful" findings
+        ex.id !== (endingSoon[0]?.id)
+      );
 
-    // Tip 4: Interaction based
-    if (visitHistory.length > 5) {
+      if (hiddenGem) {
+        const inst = getInstitutionById(hiddenGem.institutionId);
+        tips.push({
+          id: `tip-gem-${hiddenGem.id}`,
+          type: 'favorite',
+          title: 'Curated for You',
+          description: `Since you enjoy ${topInterest}, don't miss "${hiddenGem.title}" at the ${inst ? inst.shortName : 'museum'}. It's a rare find.`,
+          label: 'Hidden Gem'
+        });
+      }
+    }
+
+    // Tip 4: Interaction / Deep Dive (if no specific gem found, or as extra)
+    if (tips.length < 3) {
       tips.push({
         id: 'tip-deep-dive',
         type: 'favorite',
-        title: 'Become a regular',
-        description: 'Visiting the same collection multiple times reveals details you missed the first time.',
-        label: 'Deep Dive'
+        title: 'The Art of Slowing Down',
+        description: 'Museum fatigue is real. Choose one gallery, sit with one piece for ten minutes, and let the rest wait for next time.',
+        label: 'Mindful Visit'
       });
-    } else {
+    }
+
+    // Ensure we have 4 tips constantly
+    while (tips.length < 4) {
       tips.push({
-        id: 'tip-start',
-        type: 'favorite',
-        title: 'Start with what you love',
-        description: 'Don\'t feel pressured to see everything. Pick one wing and take your time.',
-        label: 'Beginner Tip'
+        id: `tip-filler-${tips.length}`,
+        type: 'insider',
+        title: 'Change Your Perspective',
+        description: 'Sometimes the architecture is as compelling as the art. Look up.',
+        label: 'Inspiration'
       });
     }
 
