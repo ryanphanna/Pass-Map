@@ -432,13 +432,20 @@ const Discover = ({ onNavigate }) => {
 
   return (
     <div className="min-h-screen bg-accent-cream pb-20">
-      {/* Minimal Hero - Magazine masthead style */}
-      <div className="relative bg-gradient-to-br from-neutral-900 via-primary-900 to-primary-800 text-white py-16 sm:py-20 px-6 sm:px-8 overflow-hidden">
-        {/* Decorative background elements */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-accent-gold/10 rounded-full -translate-y-48 translate-x-48 blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-accent-sage/10 rounded-full translate-y-32 -translate-x-48 blur-3xl" />
+      {/* Minimal Hero - Immersive Landscape (Agora Style) */}
+      <div className="relative text-white py-32 sm:py-40 px-6 sm:px-8 overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0 z-0">
+          <img
+            src="/hero_background.png"
+            alt="Classical landscape"
+            className="w-full h-full object-cover scale-105"
+          />
+          {/* Gradient Overlay for text readability */}
+          <div className="absolute inset-0 bg-gradient-to-t from-neutral-900 via-neutral-900/40 to-black/20" />
+        </div>
 
-        <div className="max-w-7xl mx-auto relative">
+        <div className="max-w-7xl mx-auto relative z-10 pt-20">
           <div className="flex items-center gap-3 mb-4">
             <Sparkles size={20} className="text-accent-gold" strokeWidth={2.5} />
             <span className="text-caption text-white/70 uppercase tracking-widest">
