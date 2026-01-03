@@ -441,7 +441,11 @@ const Discover = ({ onNavigate }) => {
         <div className="max-w-7xl mx-auto relative">
           <div className="flex items-center gap-3 mb-4">
             <Sparkles size={20} className="text-accent-gold" strokeWidth={2.5} />
-            <span className="text-caption text-white/70 uppercase tracking-widest">Curated For You</span>
+            <span className="text-caption text-white/70 uppercase tracking-widest">
+              {new Date().getHours() < 12 ? 'Good Morning' :
+                new Date().getHours() < 18 ? 'Good Afternoon' :
+                  'Good Evening'}
+            </span>
           </div>
           <h1 className="text-5xl sm:text-6xl md:text-7xl font-black mb-4 text-shadow-editorial leading-none">
             Discover
