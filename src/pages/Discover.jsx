@@ -99,6 +99,8 @@ const Discover = ({ onNavigate }) => {
       neighborhoodGroups[n].length >= 2
     );
 
+
+
     if (bestNeighborhood) {
       // Logic for cities with density (e.g. "Museum Mile")
       tips.push({
@@ -109,20 +111,42 @@ const Discover = ({ onNavigate }) => {
         label: 'Curated Itinerary'
       });
     } else {
-      // Logic for spread out cities: Anchor institution + Neighborhood exploration
+      // Logic for spread out cities: Anchor institution + Timing Utility
       const neighborhoods = Object.keys(neighborhoodGroups);
       if (neighborhoods.length > 0) {
-        // Pick a random neighborhood that has at least one spot
+        // Pick a random neighborhood/institution
         const randomNeighborhood = neighborhoods[Math.floor(Math.random() * neighborhoods.length)];
         const anchorInst = neighborhoodGroups[randomNeighborhood][0];
 
-        tips.push({
-          id: `tip-neighborhood-${randomNeighborhood}`,
-          type: 'neighborhood',
-          title: `Discover ${randomNeighborhood}`,
-          description: `The ${anchorInst.shortName} isn't just a destination, it's the anchor of the neighborhood. Plan time to explore the surrounding streets.`,
-          label: 'Day Trip'
-        });
+        // Extract day from hours note if possible (e.g. "Fridays")
+        const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+        const foundDay = days.find(day => anchorInst.hours.note?.includes(day));
+
+        if (foundDay) {
+          tips.push({
+            id: `tip-timing-${anchorInst.id}`,
+            type: 'insider',
+            title: `Night at the Museum`,
+            description: `The ${anchorInst.shortName} keeps its doors open late on ${foundDay}s. It's the perfect time for a quieter, atmospheric visit.`,
+            label: 'Pro Tip'
+          });
+        } else if (anchorInst.type === 'zoo' || anchorInst.type === 'garden') {
+          tips.push({
+            id: `tip-bio-rhythm-${anchorInst.id}`,
+            type: 'insider',
+            title: `Morning Ritual`,
+            description: `The ${anchorInst.shortName} feels different at 10 AM. The residents are most active, and the crowds haven't arrived.`,
+            label: 'Insider Secret'
+          });
+        } else {
+          tips.push({
+            id: `tip-focus-${anchorInst.id}`,
+            type: 'favorite',
+            title: `The 45-Minute Rule`,
+            description: `Don't try to see all of the ${anchorInst.shortName}. Pick one wing, turn your phone off, and truly see it.`,
+            label: 'Mindful Visit'
+          });
+        }
       }
     }
 
