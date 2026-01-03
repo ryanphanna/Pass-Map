@@ -100,7 +100,7 @@ const Discover = ({ onNavigate }) => {
     );
 
     if (bestNeighborhood) {
-      const venues = neighborhoodGroups[bestNeighborhood].slice(0, 2).map(i => i.shortName).join(' and ');
+      // Logic for cities with density (e.g. "Museum Mile")
       tips.push({
         id: `tip-neighborhood-${bestNeighborhood}`,
         type: 'neighborhood',
@@ -108,6 +108,22 @@ const Discover = ({ onNavigate }) => {
         description: `Experience a vetted cultural dialogue: The ${neighborhoodGroups[bestNeighborhood][0].shortName} and ${neighborhoodGroups[bestNeighborhood][1].shortName} are just steps apart.`,
         label: 'Curated Itinerary'
       });
+    } else {
+      // Logic for spread out cities: Anchor institution + Neighborhood exploration
+      const neighborhoods = Object.keys(neighborhoodGroups);
+      if (neighborhoods.length > 0) {
+        // Pick a random neighborhood that has at least one spot
+        const randomNeighborhood = neighborhoods[Math.floor(Math.random() * neighborhoods.length)];
+        const anchorInst = neighborhoodGroups[randomNeighborhood][0];
+
+        tips.push({
+          id: `tip-neighborhood-${randomNeighborhood}`,
+          type: 'neighborhood',
+          title: `Discover ${randomNeighborhood}`,
+          description: `The ${anchorInst.shortName} isn't just a destination, it's the anchor of the neighborhood. Plan time to explore the surrounding streets.`,
+          label: 'Day Trip'
+        });
+      }
     }
 
     // Tip 2: Access & Solitude (Membership value = Experience quality)
